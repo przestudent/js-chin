@@ -1,0 +1,136 @@
+:root {
+  box-sizing: border-box;
+  --width: 50px;
+  --square-border-width: 2px;
+}
+.player {
+  width: 50vw;
+  font-size: 200px;
+}
+
+.dice-throw{
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+[class*="fa-"]{
+  font-size: 100px;
+  visibility: hidden;
+  position: absolute;
+  transform: scale(100%);
+  transition: all 0.5s ease-in;
+}
+[class*="fa-"]:hover{
+  transform: scale(110%);
+  transition: all 0.5s ease-in;
+}
+
+
+
+.square {
+  border: 2px solid black;
+  width: var(--width);
+  height: 50px;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: 1fr 1fr;
+}
+
+.pawn-square-spawn {
+  position: fixed;
+  border: 2px solid black;
+  width: 100px;
+  height: 100px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+}
+
+.pawn {
+  width: 30px;
+  height: 30px;
+}
+.pawn[data-flip="invert"] {
+  transform: translate(calc(var(--dx) * 1px), calc(var(--dy) * 1px));
+}
+.pawn[data-flip="play"] {
+  transform: none;
+  transition: transform 0.3s;
+}
+
+.board {
+  display: grid;
+  place-items: center;
+}
+
+.three-row {
+  display: flex;
+}
+
+.longest-row {
+  display: flex;
+}
+.top-right {
+  right: 0;
+  top: 0;
+}
+.top-left {
+  left: 0;
+  top: 0;
+}
+.bottom-left {
+  bottom: 0;
+  left: 0;
+}
+.bottom-right {
+  bottom: 0;
+  right: 0;
+}
+
+.green {
+  background-color: green;
+}
+.red {
+  background-color: red;
+}
+.blue {
+  background-color: blue;
+}
+.yellow {
+  background-color: yellow;
+}
+.black {
+  background-color: black;
+}
+.green-light {
+  background-color: lightgreen;
+}
+.red-light {
+  background-color: pink;
+}
+.blue-light {
+  background-color: lightblue;
+}
+.yellow-light {
+  background-color: rgb(255, 255, 126);
+}
+.Dice {
+  bottom: 0;
+  left: 40%;
+  margin: 0 auto;
+  background-color: black;
+  width: 20px;
+  height: 20px;
+  position: fixed;
+}
+.place-pawn {
+  bottom: 0;
+  left: 60%;
+  margin: 0 auto;
+  background-color: green;
+  width: 20px;
+  height: 20px;
+  position: fixed;
+}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Parcel Sandbox</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/styles.dd855970.css">
+    <script src="https://kit.fontawesome.com/2f4e2dac07.js" crossorigin="anonymous"></script>
+  <script src="/styles.dd855970.js"></script></head>
+
+  <body>
+    <main>
+      <div class="player">red</div>
+      <div class="dice-throw">
+        <i class="fa-solid fa-dice-one"></i>
+        <i class="fa-solid fa-dice-two"></i>
+        <i class="fa-solid fa-dice-three"></i>
+        <i class="fa-solid fa-dice-four"></i>
+        <i class="fa-solid fa-dice-five"></i>
+        <i class="fa-solid fa-dice-six"></i>
+      </div>
+      <div class="Dice"></div>
+      <div class="place-pawn"></div>
+      <section id="pawns-red" class="pawn-square-spawn top-left">
+        <div data-pawn="red" class="pawn red"></div>
+        <div data-pawn="red" class="pawn red"></div>
+        <div data-pawn="red" class="pawn red"></div>
+        <div data-pawn="red" class="pawn red"></div>
+      </section>
+      <section id="pawns-blue" class="pawn-square-spawn top-right">
+        <div data-pawn="blue" class="pawn blue"></div>
+        <div data-pawn="blue" class="pawn blue"></div>
+        <div data-pawn="blue" class="pawn blue"></div>
+        <div data-pawn="blue" class="pawn blue"></div>
+      </section>
+      <section id="pawns-yellow" class="pawn-square-spawn bottom-left">
+        <div data-pawn="yellow" class="pawn yellow"></div>
+        <div data-pawn="yellow" class="pawn yellow"></div>
+        <div data-pawn="yellow" class="pawn yellow"></div>
+        <div data-pawn="yellow" class="pawn yellow"></div>
+      </section>
+      <section id="pawns-green" class="pawn-square-spawn bottom-right">
+        <div data-pawn="green" class="pawn green"></div>
+        <div data-pawn="green" class="pawn green"></div>
+        <div data-pawn="green" class="pawn green"></div>
+        <div data-pawn="green" class="pawn green"></div>
+      </section>
+      <section class="board">
+        <div class="three-row">
+          <div class="square" data-index="0"></div>
+          <div data-end="blue" class="square" data-index="1"></div>
+          <div class="square blue-light" data-index="2"></div>
+        </div>
+        <div class="three-row">
+          <div class="square" data-index="39"></div>
+          <div data-winblue="0" class="square blue"></div>
+          <div class="square" data-index="3"></div>
+        </div>
+        <div class="three-row">
+          <div class="square" data-index="38"></div>
+          <div data-winblue="1" class="square blue"></div>
+          <div class="square" data-index="4"></div>
+        </div>
+        <div class="three-row">
+          <div class="square" data-index="37"></div>
+          <div data-winblue="2" class="square blue"></div>
+          <div class="square" data-index="5"></div>
+        </div>
+        <div class="longest-row">
+          <div class="square red-light" data-index="32"></div>
+          <div class="square" data-index="33"></div>
+          <div class="square" data-index="34"></div>
+          <div class="square" data-index="35"></div>
+          <div class="square" data-index="36"></div>
+          <div data-winblue="3" class="square blue"></div>
+          <div class="square" data-index="6"></div>
+          <div class="square" data-index="7"></div>
+          <div class="square" data-index="8"></div>
+          <div class="square" data-index="9"></div>
+          <div class="square" data-index="10"></div>
+        </div>
+        <div class="longest-row">
+          <div data-end="red" class="square" data-index="31"></div>
+          <div data-winred="0" class="square red"></div>
+          <div data-winred="1" class="square red"></div>
+          <div data-winred="2" class="square red"></div>
+          <div data-winred="3" class="square red"></div>
+          <div data-winall="0" class="square black"></div>
+          <div data-wingreen="3" class="square green"></div>
+          <div data-wingreen="2" class="square green"></div>
+          <div data-wingreen="1" class="square green"></div>
+          <div data-wingreen="0 " class="square green"></div>
+          <div data-end="green" class="square" data-index="11"></div>
+        </div>
+        <div class="longest-row">
+          <div class="square" data-index="30"></div>
+          <div class="square" data-index="29"></div>
+          <div class="square" data-index="28"></div>
+          <div class="square" data-index="27"></div>
+          <div class="square" data-index="26"></div>
+          <div data-winyellow="3" class="square yellow"></div>
+          <div class="square" data-index="16"></div>
+          <div class="square" data-index="15"></div>
+          <div class="square" data-index="14"></div>
+          <div class="square" data-index="13"></div>
+          <div class="square green-light" data-index="12"></div>
+        </div>
+
+        <div class="three-row">
+          <div class="square" data-index="25"></div>
+          <div data-winyellow="2" class="square yellow"></div>
+          <div class="square" data-index="17"></div>
+        </div>
+        <div class="three-row">
+          <div class="square" data-index="24"></div>
+          <div data-winyellow="1" class="square yellow"></div>
+          <div class="square" data-index="18"></div>
+        </div>
+        <div class="three-row">
+          <div class="square" data-index="23"></div>
+          <div data-winyellow="0 " class="square yellow"></div>
+          <div class="square" data-index="19"></div>
+        </div>
+        <div class="three-row">
+          <div class="square yellow-light" data-index="22"></div>
+          <div data-end="yellow" class="square" data-index="21"></div>
+          <div class="square" data-index="20"></div>
+        </div>
+      </section>
+    </main>
+    <script src="/src.a2b27638.js"></script>
+  </body>
+</html>
