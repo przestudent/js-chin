@@ -124,120 +124,120 @@ var colorOrder = {
   green: "yellow",
   yellow: "red"
 };
-function Init() {
-  var playerColor = "red";
+var playerColor = "red";
+var moveCount = 0;
 
-  //#region
-  var dices = document.querySelectorAll(".dice-throw>i");
-  dices[0].style.visibility = "visible";
-  //const diceCount = document.querySelector(".diceCount");
-  var board = document.querySelector(".board");
-  var playableSquares = Array.from(document.querySelectorAll(".square[data-index]"));
-  playableSquares.sort(function (a, b) {
-    return a.dataset.index - b.dataset.index;
-  });
-  //playableSquares.forEach((e) => console.log(e.getBoundingClientRect()));
-  var boardPlayArray = new Array(playableSquares.length).fill("");
-  var redPawns = document.querySelector("#pawns-red");
-  var greenPawns = document.querySelector("#pawns-green");
-  var yellowPawns = document.querySelector("#pawns-yellow");
-  var bluePawns = document.querySelector("#pawns-blue");
-  var redStart = document.querySelector(".red-light").dataset.index;
-  var blueStart = document.querySelector(".blue-light").dataset.index;
-  var yellowStart = document.querySelector(".yellow-light").dataset.index;
-  var greenStart = document.querySelector(".green-light").dataset.index;
-  var greenWinLane = Array.from(document.querySelectorAll("[data-wingreen]")).sort(function (a, b) {
-    return a.dataset.wingreen - b.dataset.wingreen;
-  });
-  var bluenWinLane = Array.from(document.querySelectorAll("[data-winblue]")).sort(function (a, b) {
-    return a.dataset.winblue - b.dataset.winblue;
-  });
-  var redWinLane = Array.from(document.querySelectorAll("[data-winred]")).sort(function (a, b) {
-    return a.dataset.winred - b.dataset.winred;
-  });
-  var yellowWinLane = Array.from(document.querySelectorAll("[data-winyellow]")).sort(function (a, b) {
-    return a.dataset.winyellow - b.dataset.winyellow;
-  });
-  var redEnd = document.querySelector("[data-end=red]");
-  var blueEnd = document.querySelector("[data-end=blue]");
-  var yellowEnd = document.querySelector("[data-end=yellow]");
-  var greenEnd = document.querySelector("[data-end=green]");
-  var redLaneArray = new Array(4).fill("");
-  var blueLaneArray = new Array(4).fill("");
-  var yellowLaneArray = new Array(4).fill("");
-  var greenLaneArray = new Array(4).fill("");
-  var colorLaneArray = {
-    red: redLaneArray,
-    blue: blueLaneArray,
-    yellow: yellowLaneArray,
-    green: greenLaneArray
-  };
-  var playerColorShow = document.querySelector(".player");
-  //#endregion
-  var colorWinLane = {
-    red: redWinLane,
-    green: greenWinLane,
-    yellow: yellowWinLane,
-    blue: bluenWinLane
-  };
-  var colorEnd = {
-    red: redEnd,
-    blue: blueEnd,
-    yellow: yellowEnd,
-    green: greenEnd
-  };
-  var colorStart = {
-    red: redStart,
-    blue: blueStart,
-    yellow: yellowStart,
-    green: greenStart
-  };
-  var colorPawnsSpawn = {
-    red: redPawns,
-    blue: bluePawns,
-    yellow: yellowPawns,
-    green: greenPawns
-  };
-  var diceThrow = 0;
-  document.querySelector(".Dice").addEventListener("click", HandleDice);
-  function Handle6() {
-    var removedPawnFromSpawn = RemoveChildFromAnElement(colorPawnsSpawn[playerColor]);
-    playableSquares[colorStart[playerColor]].appendChild(removedPawnFromSpawn);
-    boardPlayArray[colorStart[playerColor]] = playerColor;
-    HandleDice();
-  }
-  function HandleDice() {
-    diceThrow = Math.floor(Math.random() * 6) + 1;
-    TurnOnDice(diceThrow, dices);
-    //diceCount.innerText = diceThrow;
-    var index;
-    console.log("CHILDREN__".concat(colorPawnsSpawn[playerColor].childElementCount, "__DICE:").concat(diceThrow, "__color:").concat(playerColor));
-    if (diceThrow == 6 && colorPawnsSpawn[playerColor].childElementCount > 0) {
-      Handle6();
-      return;
-    }
-    if (boardPlayArray.includes(playerColor)) {
-      index = boardPlayArray.indexOf(playerColor);
-      var indexNext = (index + diceThrow) % boardPlayArray.length;
-      PlacePawn(index, indexNext);
-    }
-    //playerColorShow.innerText = colorOrder[playerColor];
-    // playerColor = colorOrder[playerColor];
-  }
+//#region
 
-  function PlacePawn(currIndex) {
-    var nextIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : currIndex;
-    console.log("".concat(currIndex, "    ->      ").concat(nextIndex));
-    boardPlayArray[currIndex] = "";
-    var removedPawn = playableSquares[currIndex].removeChild(playableSquares[currIndex].firstChild);
-    if (boardPlayArray[nextIndex] && boardPlayArray[nextIndex] !== playerColor) {
-      var pawnColorToGoBackToSpawn = boardPlayArray[nextIndex].dataset.pawn;
-      var knockedPawn = RemoveChildFromAnElement(playableSquares[nextIndex]);
-      colorPawnsSpawn[pawnColorToGoBackToSpawn].appendChild(knockedPawn);
-    }
-    boardPlayArray[nextIndex] = playerColor;
-    playableSquares[nextIndex].appendChild(removedPawn);
+var boardHistory = document.querySelector(".board-history-table>tbody");
+var dices = document.querySelectorAll(".dice-throw>i");
+dices[0].style.visibility = "visible";
+var board = document.querySelector(".board");
+var playableSquares = Array.from(document.querySelectorAll(".square[data-index]"));
+playableSquares.sort(function (a, b) {
+  return a.dataset.index - b.dataset.index;
+});
+var boardPlayArray = new Array(playableSquares.length).fill("");
+var redPawns = document.querySelector("#pawns-red");
+var greenPawns = document.querySelector("#pawns-green");
+var yellowPawns = document.querySelector("#pawns-yellow");
+var bluePawns = document.querySelector("#pawns-blue");
+var redStart = document.querySelector(".red-light").dataset.index;
+var blueStart = document.querySelector(".blue-light").dataset.index;
+var yellowStart = document.querySelector(".yellow-light").dataset.index;
+var greenStart = document.querySelector(".green-light").dataset.index;
+var greenWinLane = Array.from(document.querySelectorAll("[data-wingreen]")).sort(function (a, b) {
+  return a.dataset.wingreen - b.dataset.wingreen;
+});
+var bluenWinLane = Array.from(document.querySelectorAll("[data-winblue]")).sort(function (a, b) {
+  return a.dataset.winblue - b.dataset.winblue;
+});
+var redWinLane = Array.from(document.querySelectorAll("[data-winred]")).sort(function (a, b) {
+  return a.dataset.winred - b.dataset.winred;
+});
+var yellowWinLane = Array.from(document.querySelectorAll("[data-winyellow]")).sort(function (a, b) {
+  return a.dataset.winyellow - b.dataset.winyellow;
+});
+var redEnd = document.querySelector("[data-end=red]");
+var blueEnd = document.querySelector("[data-end=blue]");
+var yellowEnd = document.querySelector("[data-end=yellow]");
+var greenEnd = document.querySelector("[data-end=green]");
+var redLaneArray = new Array(4).fill("");
+var blueLaneArray = new Array(4).fill("");
+var yellowLaneArray = new Array(4).fill("");
+var greenLaneArray = new Array(4).fill("");
+var colorLaneArray = {
+  red: redLaneArray,
+  blue: blueLaneArray,
+  yellow: yellowLaneArray,
+  green: greenLaneArray
+};
+var playerColorShow = document.querySelector(".player");
+//#endregion
+var colorWinLane = {
+  red: redWinLane,
+  green: greenWinLane,
+  yellow: yellowWinLane,
+  blue: bluenWinLane
+};
+var colorEnd = {
+  red: redEnd,
+  blue: blueEnd,
+  yellow: yellowEnd,
+  green: greenEnd
+};
+var colorStart = {
+  red: redStart,
+  blue: blueStart,
+  yellow: yellowStart,
+  green: greenStart
+};
+var colorPawnsSpawn = {
+  red: redPawns,
+  blue: bluePawns,
+  yellow: yellowPawns,
+  green: greenPawns
+};
+var diceThrow = 0;
+document.querySelector(".Dice").addEventListener("click", HandleDice);
+function Handle6() {
+  var removedPawnFromSpawn = RemoveChildFromAnElement(colorPawnsSpawn[playerColor]);
+  playableSquares[colorStart[playerColor]].appendChild(removedPawnFromSpawn);
+  boardPlayArray[colorStart[playerColor]] = playerColor;
+  HandleDice();
+}
+function HandleDice() {
+  diceThrow = Math.floor(Math.random() * 6) + 1;
+  moveCount++;
+  TurnOnDice(diceThrow, dices);
+  //diceCount.innerText = diceThrow;
+  var index;
+  console.log("CHILDREN__".concat(colorPawnsSpawn[playerColor].childElementCount, "__DICE:").concat(diceThrow, "__color:").concat(playerColor));
+  AppendBoardHistory();
+  if (diceThrow == 6 && colorPawnsSpawn[playerColor].childElementCount > 0) {
+    Handle6();
+    return;
   }
+  if (boardPlayArray.includes(playerColor)) {
+    index = boardPlayArray.indexOf(playerColor);
+    var indexNext = (index + diceThrow) % boardPlayArray.length;
+    PlacePawn(index, indexNext);
+  }
+  playerColorShow.innerText = colorOrder[playerColor];
+  playerColor = colorOrder[playerColor];
+}
+function PlacePawn(currIndex) {
+  var nextIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : currIndex;
+  console.log("".concat(currIndex, "    ->      ").concat(nextIndex));
+  boardPlayArray[currIndex] = "";
+  var removedPawn = playableSquares[currIndex].removeChild(playableSquares[currIndex].firstChild);
+  if (boardPlayArray[nextIndex] && boardPlayArray[nextIndex] !== playerColor) {
+    var pawnColorToGoBackToSpawn = boardPlayArray[nextIndex].dataset.pawn;
+    var knockedPawn = RemoveChildFromAnElement(playableSquares[nextIndex]);
+    colorPawnsSpawn[pawnColorToGoBackToSpawn].appendChild(knockedPawn);
+  }
+  boardPlayArray[nextIndex] = playerColor;
+  playableSquares[nextIndex].appendChild(removedPawn);
 }
 function RemoveChildFromAnElement(parent) {
   return parent.removeChild(parent.children[0]);
@@ -248,22 +248,31 @@ function TurnOnDice(i, dicesRef) {
   });
   dicesRef[i - 1].style.visibility = "visible";
 }
-function FLIP(firstRECT, secondRECT) {
-  var rect1 = firstRECT.getBoundingClientRect();
-  var rect2 = secondRECT.getBoundingClientRect();
-  var dx = rect1.left - rect2.left,
-    dy = rect1.top - rect2.top;
-  firstRECT.dataset.filpping = true;
-  firstRECT.style.setProperty("--dx", dx);
-  firstRECT.style.setProperty("--dy", dy);
-  requestAnimationFrame(function () {
-    console.log(firstRECT);
-    requestAnimationFrame(function () {
-      return firstRECT.dataset.flip = "play";
-    });
-  });
+
+// function FLIP(firstRECT, secondRECT) {
+//   const rect1 = firstRECT.getBoundingClientRect();
+//   const rect2 = secondRECT.getBoundingClientRect();
+//   const [dx, dy] = [rect1.left - rect2.left, rect1.top - rect2.top];
+//   firstRECT.dataset.filpping = true;
+//   firstRECT.style.setProperty("--dx", dx);
+//   firstRECT.style.setProperty("--dy", dy);
+//   requestAnimationFrame(() => {
+//     console.log(firstRECT);
+//     requestAnimationFrame(() => (firstRECT.dataset.flip = "play"));
+//   });
+// }
+function AppendBoardHistory() {
+  var tableRow = document.createElement("tr");
+  tableRow.innerHTML = "<td>".concat(moveCount, "</td><td style=\"--player-color:").concat(playerColor, "\">").concat(playerColor, "</td><td>").concat(diceThrow, "</td>");
+  console.log(!boardHistory.children.length);
+  if (!boardHistory.children.length) {
+    boardHistory.appendChild(tableRow);
+  } else {
+    console.log(boardHistory.children[0]);
+    console.log(boardHistory.children[0].parentNode);
+    boardHistory.insertBefore(tableRow, boardHistory.children[0]);
+  }
 }
-Init();
 },{}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -289,7 +298,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65408" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57728" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

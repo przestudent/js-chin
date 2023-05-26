@@ -6,17 +6,18 @@ const colorOrder = {
 };
 
 let playerColor = "red";
+let moveCount = 0;
 
 //#region
+
+const boardHistory = document.querySelector(".board-history-table>tbody");
 const dices = document.querySelectorAll(".dice-throw>i");
 dices[0].style.visibility = "visible";
-//const diceCount = document.querySelector(".diceCount");
 const board = document.querySelector(".board");
 const playableSquares = Array.from(
   document.querySelectorAll(".square[data-index]")
 );
 playableSquares.sort((a, b) => a.dataset.index - b.dataset.index);
-//playableSquares.forEach((e) => console.log(e.getBoundingClientRect()));
 const boardPlayArray = new Array(playableSquares.length).fill("");
 const redPawns = document.querySelector("#pawns-red");
 const greenPawns = document.querySelector("#pawns-green");
@@ -96,12 +97,14 @@ function Handle6() {
 }
 function HandleDice() {
   diceThrow = Math.floor(Math.random() * 6) + 1;
+  moveCount++;
   TurnOnDice(diceThrow, dices);
   //diceCount.innerText = diceThrow;
   let index;
   console.log(
     `CHILDREN__${colorPawnsSpawn[playerColor].childElementCount}__DICE:${diceThrow}__color:${playerColor}`
   );
+  AppendBoardHistory();
   if (diceThrow == 6 && colorPawnsSpawn[playerColor].childElementCount > 0) {
     Handle6();
     return;
@@ -112,8 +115,8 @@ function HandleDice() {
 
     PlacePawn(index, indexNext);
   }
-  //playerColorShow.innerText = colorOrder[playerColor];
-  // playerColor = colorOrder[playerColor];
+  playerColorShow.innerText = colorOrder[playerColor];
+  playerColor = colorOrder[playerColor];
 }
 function PlacePawn(currIndex, nextIndex = currIndex) {
   console.log(`${currIndex}    ->      ${nextIndex}`);
@@ -140,15 +143,27 @@ function TurnOnDice(i, dicesRef) {
   dicesRef[i - 1].style.visibility = "visible";
 }
 
-function FLIP(firstRECT, secondRECT) {
-  const rect1 = firstRECT.getBoundingClientRect();
-  const rect2 = secondRECT.getBoundingClientRect();
-  const [dx, dy] = [rect1.left - rect2.left, rect1.top - rect2.top];
-  firstRECT.dataset.filpping = true;
-  firstRECT.style.setProperty("--dx", dx);
-  firstRECT.style.setProperty("--dy", dy);
-  requestAnimationFrame(() => {
-    console.log(firstRECT);
-    requestAnimationFrame(() => (firstRECT.dataset.flip = "play"));
-  });
+// function FLIP(firstRECT, secondRECT) {
+//   const rect1 = firstRECT.getBoundingClientRect();
+//   const rect2 = secondRECT.getBoundingClientRect();
+//   const [dx, dy] = [rect1.left - rect2.left, rect1.top - rect2.top];
+//   firstRECT.dataset.filpping = true;
+//   firstRECT.style.setProperty("--dx", dx);
+//   firstRECT.style.setProperty("--dy", dy);
+//   requestAnimationFrame(() => {
+//     console.log(firstRECT);
+//     requestAnimationFrame(() => (firstRECT.dataset.flip = "play"));
+//   });
+// }
+function AppendBoardHistory() {
+  const tableRow = document.createElement("tr");
+  tableRow.innerHTML = `<td>${moveCount}</td><td style="--player-color:${playerColor}">${playerColor}</td><td>${diceThrow}</td>`;
+  console.log(!boardHistory.children.length);
+  if (!boardHistory.children.length) {
+    boardHistory.appendChild(tableRow);
+  } else {
+    console.log(boardHistory.children[0]);
+    console.log(boardHistory.children[0].parentNode);
+    boardHistory.insertBefore(tableRow, boardHistory.children[0]);
+  }
 }
