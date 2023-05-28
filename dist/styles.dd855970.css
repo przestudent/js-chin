@@ -8,12 +8,14 @@
   --gradient: radial-gradient(circle, var(--color-accent) 0%, var(--color-button-primary) 89%);
   --spawn-size: 7rem;
   --dice-button-size: 2rem;
+  --background-default: white;
   font-family: var(--font-inter);
 }
 
 
 /* #region pawns-and-pawn-squares */
 .pawn-square-spawn {
+  background-color: var(--background-default);
   position: absolute;
   border: 2px solid black;
   width: var(--spawn-size);
@@ -47,6 +49,7 @@
 }
 
 .square {
+  background-color: var(--background-default);
   border: 2px solid black;
   width: var(--square-size);
   height: var(--square-size);
@@ -155,6 +158,7 @@
 }
 
 .board-history {
+  background-color: var(--background-default);
   overflow: scroll;
   height: 25rem;
   width: calc(var(--spawn-size) *1.7);
@@ -227,5 +231,9 @@ table>tbody>tr>td:nth-child(2) {
 
 
 /* #endregion */
+
+
+
+/* TODO: ADD FIXED SIZE TO PLAYER COLOR SO THE DICE WONT MOVE */
 
 /*# sourceMappingURL=/styles.dd855970.css.map */
