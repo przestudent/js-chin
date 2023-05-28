@@ -9,14 +9,50 @@
   --spawn-size: 7rem;
   --dice-button-size: 2rem;
   --background-default: white;
+  --column-size: 7vw;
   font-family: var(--font-inter);
 }
 
+body {
+  padding: 0;
+  margin: 0;
+  background-color: black;
+}
+
+#game-wrapper {
+  background-color: white;
+  display: grid;
+  justify-items: center;
+  grid-template-columns: 1fr 1fr 1fr;
+  height: 100%;
+}
+
+.column {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-content: space-between;
+}
+
+.column-left {
+  order: 1;
+  justify-items: start;
+}
+
+.column-right {
+  order: 3;
+  justify-items: end;
+}
+
+.column-middle {
+  order: 2;
+  grid-column: span 1;
+}
 
 /* #region pawns-and-pawn-squares */
 .pawn-square-spawn {
   background-color: var(--background-default);
-  position: absolute;
+
   border: 2px solid black;
   width: var(--spawn-size);
   height: var(--spawn-size);
@@ -35,9 +71,6 @@
 
 /* #region board */
 .board-wrapper {
-  position: absolute;
-  width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -66,26 +99,6 @@
 
 .longest-row {
   display: flex;
-}
-
-.top-right {
-  right: 0;
-  top: 0;
-}
-
-.top-left {
-  left: 0;
-  top: 0;
-}
-
-.bottom-left {
-  bottom: 0;
-  left: 0;
-}
-
-.bottom-right {
-  bottom: 0;
-  right: 0;
 }
 
 .green {
@@ -128,9 +141,6 @@
 
 /* #region bottom-dice */
 .dice-wrapper {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
   display: flex;
   justify-content: center;
   height: var(--spawn-size);
@@ -148,13 +158,9 @@
 /* #endregion */
 /* #region board-history */
 
-
 .board-history-wrapper {
-  position: absolute;
-  right: 0;
   display: flex;
   align-items: center;
-  height: 100%;
 }
 
 .board-history {
@@ -163,7 +169,6 @@
   height: 25rem;
   width: calc(var(--spawn-size) *1.7);
   border: 2px solid black;
-  position: relative;
   z-index: 9999;
 }
 
@@ -182,7 +187,6 @@
 
 table {
   border-collapse: collapse;
-  position: absolute;
   width: 100%;
 }
 
@@ -190,20 +194,13 @@ table>tbody>tr>td:nth-child(2) {
   color: var(--player-color)
 }
 
-
-
-
 /* #endregion */
-
-
 /* #region player-and-dice */
 .player-and-dice-wrapper {
-  width: 100%;
-  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1em
+  gap: 1rem
 }
 
 .player {
@@ -217,9 +214,9 @@ table>tbody>tr>td:nth-child(2) {
 }
 
 [class*="fa-"] {
+  position: absolute;
   font-size: 100px;
   visibility: hidden;
-  position: absolute;
   transform: scale(100%);
   transition: all 0.5s ease-in;
 }
@@ -229,9 +226,55 @@ table>tbody>tr>td:nth-child(2) {
   transition: all 0.5s ease-in;
 }
 
-
 /* #endregion */
-
-
-
 /* TODO: ADD FIXED SIZE TO PLAYER COLOR SO THE DICE WONT MOVE */
+@media (max-width:970px) {
+  #game-wrapper {
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+  }
+
+  .column-left {
+    order: 2;
+    justify-items: end;
+  }
+
+  .column-right {
+    justify-items: start;
+    order: 3;
+  }
+
+  .column-right .pawns-green {
+    order: 2;
+  }
+
+  .column-right .board-history-wrapper {
+    grid-column: span 2;
+    order: 3;
+  }
+
+  .column-middle {
+    order: 1;
+    grid-column: span 2;
+  }
+
+  .column {
+    align-content: start;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .board-history-wrapper {
+    width: 100%;
+  }
+
+
+
+  .board-history {
+    width: 100%;
+  }
+}
+
+.wide-history {
+  grid-column: span 2;
+  order: 4;
+}
