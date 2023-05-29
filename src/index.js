@@ -8,7 +8,7 @@ const colorOrder = {
 let playerColor = "red";
 let moveCount = 0;
 
-//#region
+// #region
 
 const boardHistory = document.querySelector(".board-history-table>tbody");
 const dices = document.querySelectorAll(".dice-throw>i");
@@ -159,6 +159,7 @@ function AppendBoardHistory() {
   const tableRow = document.createElement("tr");
   tableRow.innerHTML = `<td>${moveCount}</td><td style="--player-color:${playerColor}">${playerColor}</td><td>${diceThrow}</td>`;
   console.log(!boardHistory.children.length);
+
   if (!boardHistory.children.length) {
     boardHistory.appendChild(tableRow);
   } else {
