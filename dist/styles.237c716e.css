@@ -2,25 +2,48 @@
   box-sizing: border-box;
   --square-size: 3.5rem;
   --square-border-width: 2px;
-  --font-inter: 'Inter', sans-serif;
 
-  --font-oxygen: 'Oxygen', sans-serif;
   --gradient: radial-gradient(circle, var(--color-accent) 0%, var(--color-button-primary) 89%);
   --spawn-size: 7rem;
   --dice-button-size: 2rem;
-  --background-default: white;
   --column-size: 7vw;
   --pawn-width: 1.1rem;
   --pawn-height: 1.1rem;
-  font-family: var(--font-inter);
+
+  --font-inter: 'Inter', sans-serif;
+  --font-oxygen: 'Oxygen', sans-serif;
+
+  --background-default: white;
+  --border-color: black;
 }
 
 body {
+  font-family: var(--font-inter);
   padding: 0;
   margin: 0;
-  background-color: black;
+  background-color: var(--border-color);
 }
 
+/* #region modals */
+.modal-wrapper {
+  position: absolute;
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
+/* .display-none {
+  display: none;
+} */
+
+.win-info {
+  border: 2px solid var(--border-color);
+  width: 100px;
+  height: 100px;
+}
+
+/* #endregion */
+/* #region game-wrapper */
 #game-wrapper {
   background-color: white;
   display: grid;
@@ -51,10 +74,12 @@ body {
   grid-column: span 1;
 }
 
+/* #endregion */
+
 /* #region pawns-and-pawn-squares */
 .pawn-square-spawn {
   background-color: var(--background-default);
-  border: 2px solid black;
+  border: 2px solid var(--border-color);
   width: var(--spawn-size);
   height: var(--spawn-size);
   display: grid;
@@ -72,9 +97,13 @@ body {
   width: var(--spawn-size);
   height: calc(var(--pawn-height) * 1.25);
   background-color: var(--background-default);
-  border: 2px solid black;
+  border: 2px solid var(--border-color);
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+
 }
 
 .pawn {
@@ -83,7 +112,7 @@ body {
 }
 
 .win-lane {
-  border: 2px solid black;
+  border: 2px solid var(--border-color);
 }
 
 #pawns-blue,
@@ -112,7 +141,7 @@ body {
 
 .square {
   background-color: var(--background-default);
-  border: 2px solid black;
+  border: 2px solid var(--border-color);
   width: var(--square-size);
   height: var(--square-size);
   display: grid;
@@ -147,7 +176,7 @@ body {
 }
 
 .black {
-  background-color: black;
+  background-color: var(--border-color);
 }
 
 .green-light {
@@ -177,8 +206,8 @@ body {
   gap: 1rem;
 }
 
-.Dice {
-  background-color: black;
+.dice {
+  background-color: var(--border-color);
   width: var(--dice-button-size);
   height: var(--dice-button-size);
   z-index: 9999;
@@ -197,7 +226,7 @@ body {
   overflow: scroll;
   height: 25rem;
   width: calc(var(--spawn-size) *1.7);
-  border: 2px solid black;
+  border: 2px solid var(--border-color);
   z-index: 9999;
 }
 
@@ -207,14 +236,17 @@ body {
 }
 
 .board-history-table thead>tr {
-  border-bottom: 3px solid black;
+  border-bottom: 3px solid var(--border-color);
 }
 
 .board-history-table tbody>tr {
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid var(--border-color);
 }
 
-
+.wide-history {
+  grid-column: span 2;
+  order: 4;
+}
 
 table {
   border-collapse: collapse;
@@ -259,8 +291,11 @@ table>tbody>tr>td:nth-child(2) {
 }
 
 /* #endregion */
-/* TODO: ADD FIXED SIZE TO PLAYER COLOR SO THE DICE WONT MOVE */
+
 @media (max-width:970px) {
+  .modal-wrapper {
+    align-items: flex-start;
+  }
 
   #pawns-blue,
   #pawns-red {
@@ -317,9 +352,4 @@ table>tbody>tr>td:nth-child(2) {
   }
 }
 
-.wide-history {
-  grid-column: span 2;
-  order: 4;
-}
-
-/*# sourceMappingURL=/styles.dd855970.css.map */
+/*# sourceMappingURL=/styles.237c716e.css.map */

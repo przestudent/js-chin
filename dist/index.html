@@ -1,30 +1,42 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Parcel Sandbox</title>
+    <title>Chińczyk</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/styles.dd855970.css">
+    <link rel="shortcut icon" href="https://www.svgrepo.com/show/499122/dice-two.svg" type="image/x-icon">
+    <link rel="stylesheet" href="/styles.237c716e.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&family=Oxygen:wght@300&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/2f4e2dac07.js" crossorigin="anonymous"></script>
-  <script src="/styles.dd855970.js"></script></head>
+  <script src="/styles.237c716e.js"></script></head>
 
   <body>
+    <div class="modal-wrapper display-none">
+      <div class="win-info"></div>
+      <div class="choose-pawn"></div>
+      <div class="blur"></div>
+    </div>
     <div id="game-wrapper">
       <div class="column column-left">
-        <section id="pawns-red" class="pawn-square-spawn">
-          <div data-pawn="red" class="pawn red"></div>
-          <div data-pawn="red" class="pawn red"></div>
-          <div data-pawn="red" class="pawn red"></div>
-          <div data-pawn="red" class="pawn red"></div>
-        </section>
-        <section id="pawns-yellow" class="pawn-square-spawn">
-          <div data-pawn="yellow" class="pawn yellow"></div>
-          <div data-pawn="yellow" class="pawn yellow"></div>
-          <div data-pawn="yellow" class="pawn yellow"></div>
-          <div data-pawn="yellow" class="pawn yellow"></div>
-        </section>
+        <div class="spawn-container container-red">
+          <div class="finished-pawns finished-pawns-red"></div>
+          <section id="pawns-red" class="pawn-square-spawn">
+            <div data-pawn="red" class="pawn red"></div>
+            <div data-pawn="red" class="pawn red"></div>
+            <div data-pawn="red" class="pawn red"></div>
+            <div data-pawn="red" class="pawn red"></div>
+          </section>
+        </div>
+        <div class="spawn-container container-yellow">
+          <div class="finished-pawns finished-pawns-yellow"></div>
+          <section id="pawns-yellow" class="pawn-square-spawn">
+            <div data-pawn="yellow" class="pawn yellow"></div>
+            <div data-pawn="yellow" class="pawn yellow"></div>
+            <div data-pawn="yellow" class="pawn yellow"></div>
+            <div data-pawn="yellow" class="pawn yellow"></div>
+          </section>
+        </div>
       </div>
       <div class="column-middle">
         <div class="player-and-dice-wrapper">
@@ -124,16 +136,20 @@
         </div>
         <div class="dice-wrapper">
           <div class="">Dice:</div>
-          <div class="Dice"></div>
+          <div class="dice"></div>
         </div>
       </div>
       <div class="column column-right">
-        <section id="pawns-blue" class="pawn-square-spawn">
-          <div data-pawn="blue" class="pawn blue"></div>
-          <div data-pawn="blue" class="pawn blue"></div>
-          <div data-pawn="blue" class="pawn blue"></div>
-          <div data-pawn="blue" class="pawn blue"></div>
-        </section>
+        <div class="spawn-container container-blue">
+          <div class="finished-pawns finished-pawns-blue"></div>
+          <section id="pawns-blue" class="pawn-square-spawn">
+            <div data-pawn="blue" class="pawn blue"></div>
+            <div data-pawn="blue" class="pawn blue"></div>
+            <div data-pawn="blue" class="pawn blue"></div>
+            <div data-pawn="blue" class="pawn blue"></div>
+          </section>
+        </div>
+
         <div class="board-history-wrapper">
           <section class="board-history">
             <table class="board-history-table">
@@ -148,16 +164,19 @@
             </table>
           </section>
         </div>
-        <section id="pawns-green" class="pawn-square-spawn">
-          <div data-pawn="green" class="pawn green"></div>
-          <div data-pawn="green" class="pawn green"></div>
-          <div data-pawn="green" class="pawn green"></div>
-          <div data-pawn="green" class="pawn green"></div>
-        </section>
+        <div class="spawn-container container-green">
+          <div class="finished-pawns finished-pawns-green"></div>
+          <section id="pawns-green" class="pawn-square-spawn">
+            <div data-pawn="green" class="pawn green"></div>
+            <div data-pawn="green" class="pawn green"></div>
+            <div data-pawn="green" class="pawn green"></div>
+            <div data-pawn="green" class="pawn green"></div>
+          </section>
+        </div>
       </div>
     </div>
 
-    <script defer="" src="/src.a2b27638.js"></script>
-    <script src="/media-query.c1e9a4fd.js"></script>
+    <script defer="" src="/js.d818e0ef.js"></script>
+    <script src="/media-query.918a7324.js"></script>
   </body>
 </html>

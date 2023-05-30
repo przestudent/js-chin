@@ -119,12 +119,28 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   return newRequire;
 })({"src/media-query.js":[function(require,module,exports) {
 var mediaQueryListener = window.matchMedia("(max-width:970px)");
+var columnRight = document.querySelector(".column-right");
+var historyScroll = document.querySelector(".board-history-wrapper");
+var gameWrapper = document.querySelector("#game-wrapper");
+var pawnsGreen = document.querySelector(".container-green");
+mediaQueryListener.addEventListener("change", function (e) {
+  console.log("yes");
+  if (e.matches) {
+    var boardHistory = columnRight.removeChild(historyScroll);
+    boardHistory.classList.add("wide-history");
+    gameWrapper.appendChild(boardHistory);
+  } else {
+    if (historyScroll.classList.contains("wide-history")) {
+      historyScroll.classList.remove("wide-history");
+      var removedHistoryWrapper = gameWrapper.removeChild(historyScroll);
+      columnRight.insertBefore(removedHistoryWrapper, pawnsGreen);
+    }
+  }
+});
 if (mediaQueryListener.matches) {
-  var columnRight = document.querySelector(".column-right");
-  var historyScroll = document.querySelector(".board-history-wrapper");
+  console.log("start");
   var boardHistory = columnRight.removeChild(historyScroll);
   boardHistory.classList.add("wide-history");
-  var gameWrapper = document.querySelector("#game-wrapper");
   gameWrapper.appendChild(boardHistory);
 }
 
@@ -154,7 +170,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59337" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50390" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
