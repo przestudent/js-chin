@@ -32,14 +32,15 @@ body {
   align-items: center;
 }
 
-/* .display-none {
-  display: none;
-} */
+.display-none {
+  display: none !important;
+}
 
-.win-info {
+.game-info {
   border: 2px solid var(--border-color);
   width: 100px;
   height: 100px;
+  display: flex;
 }
 
 /* #endregion */

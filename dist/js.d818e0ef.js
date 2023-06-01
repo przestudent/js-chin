@@ -140,7 +140,10 @@ var board = document.querySelector(".board");
 var playableSquares = Array.from(document.querySelectorAll(".square[data-index]")).sort(function (a, b) {
   return a.dataset.index - b.dataset.index;
 });
-var boardPlayArray = new Array(playableSquares.length).fill("");
+var boardPlayArray = [];
+for (var i = 0; i < playableSquares.length; i++) {
+  boardPlayArray[i] = new Array();
+}
 var colorWin = document.querySelector(".black");
 var playerColorShow = document.querySelector(".player");
 var colorWinLane = {
@@ -187,16 +190,37 @@ var colorFinishedPawns = {
   blue: document.querySelector(".finished-pawns-blue"),
   yellow: document.querySelector(".finished-pawns-yellow")
 };
+var placePawn = document.querySelector(".place-pawn");
+var placeSkip = document.querySelector(".place-skip");
+var placeInfo = document.querySelector(".game-info");
+var dice = document.querySelector(".dice");
+placeInfo.addEventListener("click", function (e) {
+  if (e.target.classList.contains("place-pawn")) {
+    console.log(e.target);
+    if (colorPawnsSpawn[playerColor].childElementCount > 0) {
+      dice.addEventListener("click", HandleDiceREAL);
+      this.classList.toggle("display-none");
+      Handle6();
+      return;
+    }
+  } else {
+    console.log("BASE THROW CASE");
+    BaseThrowCase();
+    Handle6();
+  }
+  dice.addEventListener("click", HandleDiceREAL);
+  this.classList.toggle("display-none");
+});
 
 //#endregion
 
 var diceThrow = 0;
 var roadToWin = 39;
-document.querySelector(".dice").addEventListener("click", HandleDiceREAL);
+dice.addEventListener("click", HandleDiceREAL);
 function Handle6() {
   var removedPawnFromSpawn = RemoveChildFromAnElement(colorPawnsSpawn[playerColor]);
   playableSquares[colorStart[playerColor]].appendChild(removedPawnFromSpawn);
-  boardPlayArray[colorStart[playerColor]] = playerColor;
+  boardPlayArray[colorStart[playerColor]].push(playerColor);
   HandleDiceREAL();
 }
 function HandleDiceREAL() {
@@ -208,10 +232,10 @@ function _HandleDiceREAL() {
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
+          console.log(boardPlayArray);
           ThrowDice();
           AppendBoardHistory();
-          countPawnsOnBoard = CountPawnsOnBoard();
-          console.log(countPawnsOnBoard);
+          countPawnsOnBoard = CountPawnsOnBoard(); // console.log(countPawnsOnBoard);
           if (!(countPawnsOnBoard === 0)) {
             _context.next = 8;
             break;
@@ -220,11 +244,11 @@ function _HandleDiceREAL() {
             console.log("STARTING THROW");
             HandleStart6Throw();
           }
-          _context.next = 18;
+          _context.next = 17;
           break;
         case 8:
           if (!(diceThrow === 6)) {
-            _context.next = 17;
+            _context.next = 16;
             break;
           }
           console.log("START");
@@ -232,19 +256,15 @@ function _HandleDiceREAL() {
           _context.next = 13;
           return Thrown6AndPawnsOnBoard();
         case 13:
-          console.log("3");
-          console.log("END");
-          _context.next = 18;
-          break;
-        case 17:
+          return _context.abrupt("return");
+        case 16:
           if (countPawnsOnBoard === 1) {
+            console.log("we do da base throw");
             BaseThrowCase();
           } else {
             ManyPawnsOnBoard();
           }
-        case 18:
-          NextMoveSetUp();
-        case 19:
+        case 17:
         case "end":
           return _context.stop();
       }
@@ -256,10 +276,10 @@ function ManyPawnsOnBoard() {
   console.log("many dices");
 }
 function BaseThrowCase() {
-  var index = boardPlayArray.indexOf(playerColor);
-  var nextIndex = index + diceThrow;
-  boardPlayArray[index] = "";
-  boardPlayArray[nextIndex] = playerColor;
+  var index = boardPlayArray.indexOf([playerColor]);
+  var nextIndex = (index + diceThrow) % boardPlayArray.length;
+  boardPlayArray[index] ? boardPlayArray[index].pop() : console.log("empty");
+  boardPlayArray[nextIndex].push(playerColor);
   playableSquares[nextIndex].appendChild(RemoveChildFromAnElement(playableSquares[index]));
 }
 function Thrown6AndPawnsOnBoard() {
@@ -270,11 +290,9 @@ function _Thrown6AndPawnsOnBoard() {
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
-          //TODO: MAKE IT SO THAT YOU CANT DO THINGS HERE, SHOW MODAL AND STUFF
-          setTimeout(function () {
-            console.log("2");
-          }, 1000);
-        case 1:
+          dice.removeEventListener("click", HandleDiceREAL);
+          placeInfo.classList.toggle("display-none");
+        case 2:
         case "end":
           return _context2.stop();
       }
@@ -298,10 +316,11 @@ function HandleStart6Throw() {
   var removedPawnFromSpawn = RemoveChildFromAnElement(colorPawnsSpawn[playerColor]);
   console.log(removedPawnFromSpawn);
   playableSquares[colorStart[playerColor]].appendChild(removedPawnFromSpawn);
-  boardPlayArray[colorStart[playerColor]] = playerColor;
+  boardPlayArray[colorStart[playerColor]].push(playerColor);
   HandleDiceREAL();
 }
 
+//TODO : ADD NICE SLIDE IN FOR THE PAWN PLACEMENT/6
 // function HandleDice() {
 //   diceThrow = Math.floor(Math.random() * 6) + 1;
 //   moveCount++;
@@ -378,7 +397,7 @@ function TurnOnDice(i, dicesRef) {
 }
 function HandleWinLane(currIndex, nextIndex, removedPawn) {
   var steps = 6; //nextIndex - colorEnd[playerColor];
-  boardPlayArray[currIndex] = "";
+  boardPlayArray[currIndex].pop(); //TODO, This shit might break
   if (steps > 4) {
     HandleWin(removedPawn);
     return;
@@ -428,7 +447,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53493" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52022" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
