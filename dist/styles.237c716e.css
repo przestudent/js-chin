@@ -43,6 +43,13 @@ body {
   display: flex;
 }
 
+.game-info-top-left {
+  position: absolute;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+}
+
 /* #endregion */
 /* #region game-wrapper */
 #game-wrapper {

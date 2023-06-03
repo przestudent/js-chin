@@ -9,6 +9,23 @@ let playerColor = "red";
 let moveCount = 0;
 
 // #region
+class SquareInsides {
+  constructor() {
+    this.colors = "";
+    this.elements = 0;
+    this.powerUp = null;
+  }
+  addPawn(color) {
+    this.elements++;
+    this.colors = color;
+  }
+  removePawn() {
+    this.elements--;
+    if (this.elements <= 0) {
+      this.colors = "";
+    }
+  }
+}
 
 const boardHistory = document.querySelector(".board-history-table>tbody");
 const dices = document.querySelectorAll(".dice-throw>i");
@@ -19,7 +36,7 @@ const playableSquares = Array.from(
 ).sort((a, b) => a.dataset.index - b.dataset.index);
 const boardPlayArray = [];
 for (let i = 0; i < playableSquares.length; i++) {
-  boardPlayArray[i] = new Array();
+  boardPlayArray[i] = new SquareInsides();
 }
 
 const colorWin = document.querySelector(".black");
@@ -106,12 +123,11 @@ function Handle6() {
     colorPawnsSpawn[playerColor]
   );
   playableSquares[colorStart[playerColor]].appendChild(removedPawnFromSpawn);
-  boardPlayArray[colorStart[playerColor]].push(playerColor);
+  boardPlayArray[colorStart[playerColor]].addPawn(playerColor);
 
   HandleDiceREAL();
 }
-async function HandleDiceREAL() {
-  console.log(boardPlayArray);
+function HandleDiceREAL() {
   ThrowDice();
   AppendBoardHistory();
   const countPawnsOnBoard = CountPawnsOnBoard();
@@ -122,10 +138,14 @@ async function HandleDiceREAL() {
       HandleStart6Throw();
     }
   } else {
+    // TODO: FIX FOR MULTIPLE PAWNS
     if (diceThrow === 6) {
-      console.log("START");
-      console.log("1");
-      await Thrown6AndPawnsOnBoard();
+      console.log(
+        "🚀 ~ file: index.js:142 ~ HandleDiceREAL ~ diceThrow:",
+        diceThrow
+      );
+
+      Thrown6AndPawnsOnBoard();
       return;
     } else if (countPawnsOnBoard === 1) {
       console.log("we do da base throw");
@@ -140,21 +160,63 @@ function ManyPawnsOnBoard() {
   console.log("many dices");
 }
 function BaseThrowCase() {
-  let index = boardPlayArray.indexOf([playerColor]);
+  let index = boardPlayArray.findIndex((e) => e.colors == playerColor);
   let nextIndex = (index + diceThrow) % boardPlayArray.length;
-  boardPlayArray[index] ? boardPlayArray[index].pop() : console.log("empty");
-  boardPlayArray[nextIndex].push(playerColor);
-  playableSquares[nextIndex].appendChild(
-    RemoveChildFromAnElement(playableSquares[index])
-  );
+  PlacePawn(index, nextIndex);
+
+  // boardPlayArray[index].elements
+  //   ? boardPlayArray[index].removePawn()
+  //   : console.log("empty");
+  // boardPlayArray[nextIndex].addPawn(playerColor);
+  // playableSquares[nextIndex].appendChild(
+  //   RemoveChildFromAnElement(playableSquares[index])
+  // );
 }
-async function Thrown6AndPawnsOnBoard() {
+function PlacePawn(currIndex, nextIndex = currIndex) {
+  boardPlayArray[currIndex].removePawn();
+  const removedPawn = RemoveChildFromAnElement(playableSquares[currIndex]);
+
+  if (playerColor === "blue") {
+    let blueTempEnd = [36, 37, 38, 39, 0, 1];
+    if (
+      nextIndex > colorStart[playerColor] &&
+      blueTempEnd.includes(currIndex)
+    ) {
+      HandleWinLane(currIndex, nextIndex, removedPawn);
+    }
+  }
+  if (
+    nextIndex > colorEnd[playerColor] &&
+    currIndex < colorStart[playerColor]
+  ) {
+    HandleWinLane(currIndex, nextIndex, removedPawn);
+    return;
+  }
+  // TODO: ADD CHECKING FOR PAWNS
+  // if (boardPlayArray[nextIndex] && boardPlayArray[nextIndex] !== playerColor) {
+  //   const pawnColorToGoBackToSpawn = boardPlayArray[nextIndex].dataset.pawn;
+  //   const knockedPawn = RemoveChildFromAnElement(playableSquares[nextIndex]);
+  //   colorPawnsSpawn[pawnColorToGoBackToSpawn].appendChild(knockedPawn);
+  // }
+  boardPlayArray[nextIndex].colors = playerColor;
+  playableSquares[nextIndex].appendChild(removedPawn);
+}
+
+function Thrown6AndPawnsOnBoard() {
   dice.removeEventListener("click", HandleDiceREAL);
   placeInfo.classList.toggle("display-none");
 }
-
+let hasBeenRun = false;
 function ThrowDice() {
-  diceThrow = Math.floor(Math.random() * 6) + 1;
+  // diceThrow = Math.floor(Math.random() * 6) + 1;
+  if (!hasBeenRun) {
+    hasBeenRun = true;
+    diceThrow = 6;
+    moveCount++;
+    TurnOnDice(diceThrow, dices);
+    return;
+  }
+  diceThrow = 4;
   moveCount++;
   TurnOnDice(diceThrow, dices);
 }
@@ -175,7 +237,7 @@ function HandleStart6Throw() {
   );
   console.log(removedPawnFromSpawn);
   playableSquares[colorStart[playerColor]].appendChild(removedPawnFromSpawn);
-  boardPlayArray[colorStart[playerColor]].push(playerColor);
+  boardPlayArray[colorStart[playerColor]].addPawn(playerColor);
 
   HandleDiceREAL();
 }
@@ -247,7 +309,7 @@ function HandleStart6Throw() {
 // }
 
 function RemoveChildFromAnElement(parent) {
-  return parent.removeChild(parent.children[0]);
+  return parent.removeChild(parent.firstElementChild);
 }
 
 function TurnOnDice(i, dicesRef) {
@@ -258,8 +320,8 @@ function TurnOnDice(i, dicesRef) {
 }
 
 function HandleWinLane(currIndex, nextIndex, removedPawn) {
-  const steps = 6; //nextIndex - colorEnd[playerColor];
-  boardPlayArray[currIndex].pop(); //TODO, This shit might break
+  const steps = nextIndex - currIndex; //nextIndex - colorEnd[playerColor];
+  boardPlayArray[currIndex].removePawn(); //TODO, This shit might break
   if (steps > 4) {
     HandleWin(removedPawn);
     return;
@@ -269,7 +331,7 @@ function HandleWinLane(currIndex, nextIndex, removedPawn) {
     colorLaneArray[playerColor][steps - 1] = "red";
   }
 }
-
+// ! TODO: ADD THE WIN LANE FUNCTIONALITY FOR ONE PAWN,
 function HandleWin(removedPawn) {
   colorFinishedPawns[playerColor].appendChild(removedPawn);
   if (colorFinishedPawns.childElementCount == 4) {

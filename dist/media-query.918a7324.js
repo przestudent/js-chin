@@ -120,28 +120,41 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 })({"src/js/media-query.js":[function(require,module,exports) {
 var mediaQueryListener = window.matchMedia("(max-width:970px)");
 var columnRight = document.querySelector(".column-right");
+var columnLeft = document.querySelector(".column-left");
 var historyScroll = document.querySelector(".board-history-wrapper");
 var gameWrapper = document.querySelector("#game-wrapper");
 var pawnsGreen = document.querySelector(".container-green");
+var pawnsYellow = document.querySelector(".container-yellow");
+var gameInfo = document.querySelector(".game-info");
+var body = document.querySelector("body");
+var isMobile = false;
 mediaQueryListener.addEventListener("change", function (e) {
   console.log("yes");
   if (e.matches) {
-    var boardHistory = columnRight.removeChild(historyScroll);
-    boardHistory.classList.add("wide-history");
-    gameWrapper.appendChild(boardHistory);
+    ScreenChangeToMobile();
   } else {
-    if (historyScroll.classList.contains("wide-history")) {
+    if (isMobile) {
+      isMobile = false;
       historyScroll.classList.remove("wide-history");
+      gameInfo.classList.remove("game-info-top-left");
       var removedHistoryWrapper = gameWrapper.removeChild(historyScroll);
+      var removedGameInfo = body.removeChild(gameInfo);
+      columnLeft.insertBefore(removedGameInfo, pawnsYellow);
       columnRight.insertBefore(removedHistoryWrapper, pawnsGreen);
     }
   }
 });
 if (mediaQueryListener.matches) {
-  console.log("start");
-  var boardHistory = columnRight.removeChild(historyScroll);
-  boardHistory.classList.add("wide-history");
-  gameWrapper.appendChild(boardHistory);
+  ScreenChangeToMobile();
+}
+function ScreenChangeToMobile() {
+  isMobile = true;
+  var removedGameInfo = columnLeft.removeChild(gameInfo);
+  var removedHistoryWrapper = columnRight.removeChild(historyScroll);
+  removedHistoryWrapper.classList.add("wide-history");
+  removedGameInfo.classList.add("game-info-top-left");
+  body.appendChild(removedGameInfo);
+  gameWrapper.appendChild(removedHistoryWrapper);
 }
 
 // TODO: ADD DYNAMIC LAYOUT SHIFT, YOU KNOW ;P
@@ -170,7 +183,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52022" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55307" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
