@@ -312,11 +312,11 @@ function RemoveChildFromAnElement(parent) {
   return parent.removeChild(parent.firstElementChild);
 }
 
-function TurnOnDice(i, dicesRef) {
-  dicesRef.forEach((e) => {
+function TurnOnDice(i) {
+  dices.forEach((e) => {
     e.style.visibility = "hidden";
   });
-  dicesRef[i - 1].style.visibility = "visible";
+  dices[i - 1].style.visibility = "visible";
 }
 
 function HandleWinLane(currIndex, nextIndex, removedPawn) {

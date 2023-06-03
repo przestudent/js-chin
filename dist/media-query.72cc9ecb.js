@@ -117,62 +117,49 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
-  }
-  return bundleURL;
-}
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
-    if (matches) {
-      return getBaseURL(matches[0]);
+})({"src/js/media-query.ts":[function(require,module,exports) {
+"use strict";
+
+var mediaQueryListener = window.matchMedia("(max-width:970px)");
+var columnRight = document.querySelector(".column-right");
+//const columnLeft = document.querySelector(".column-left") as Element;
+var historyScroll = document.querySelector(".board-history-wrapper");
+var gameWrapper = document.querySelector("#game-wrapper");
+var pawnsGreen = document.querySelector(".container-green");
+//const pawnsYellow = document.querySelector(".container-yellow") as Element;
+//const gameInfo = document.querySelector(".game-info") as Element;
+//const body = document.querySelector("body") as HTMLBodyElement;
+var isMobile = false;
+mediaQueryListener.addEventListener("change", function (e) {
+  console.log("yes");
+  if (e.matches) {
+    ScreenChangeToMobile();
+  } else {
+    if (isMobile) {
+      isMobile = false;
+      historyScroll.classList.remove("wide-history");
+      // gameInfo.classList.remove("game-info-top-left");
+      var removedHistoryWrapper = gameWrapper.removeChild(historyScroll);
+      //const removedGameInfo = body.removeChild(gameInfo);
+      // columnLeft.insertBefore(removedGameInfo, pawnsYellow);
+      columnRight.insertBefore(removedHistoryWrapper, pawnsGreen);
     }
   }
-  return '/';
+});
+if (mediaQueryListener.matches) {
+  ScreenChangeToMobile();
 }
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)?\/[^/]+(?:\?.*)?$/, '$1') + '/';
+function ScreenChangeToMobile() {
+  isMobile = true;
+  // const removedGameInfo = columnLeft.removeChild(gameInfo);
+  var removedHistoryWrapper = columnRight.removeChild(historyScroll);
+  removedHistoryWrapper.classList.add("wide-history");
+  // removedGameInfo.classList.add("game-info-top-left");
+  // body.appendChild(removedGameInfo);
+  gameWrapper.appendChild(removedHistoryWrapper);
 }
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
-function updateLink(link) {
-  var newLink = link.cloneNode();
-  newLink.onload = function () {
-    link.remove();
-  };
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
-var cssTimeout = null;
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
-    }
-    cssTimeout = null;
-  }, 50);
-}
-module.exports = reloadCSS;
-},{"./bundle-url":"node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"src/css/styles.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"node_modules/parcel-bundler/src/builtins/css-loader.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+// TODO: ADD DYNAMIC LAYOUT SHIFT, YOU KNOW ;P
+},{}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -341,5 +328,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/styles.237c716e.js.map
+},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","src/js/media-query.ts"], null)
+//# sourceMappingURL=/media-query.72cc9ecb.js.map
