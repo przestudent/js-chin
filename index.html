@@ -35,10 +35,10 @@
         </div>
         <!--         
         <div class="game-info display-none"> -->
-        <div class="game-info">
+        <!-- <div class="game-info">
           <button class="place-pawn">Place Pawn</button
           ><button class="place-skip">Skip placing</button>
-        </div>
+        </div> -->
         <div class="spawn-container container-yellow">
           <div class="finished-pawns finished-pawns-yellow"></div>
           <section id="pawns-yellow" class="pawn-square-spawn">
@@ -150,7 +150,7 @@
             <div class="dice-before-text">Ready</div>
             <span>Dice:</span>
           </div>
-          <div class="dice"></div>
+          <button class="dice"></button>
         </div>
       </div>
       <div class="column column-right">
@@ -189,9 +189,17 @@
         </div>
       </div>
     </div>
-
+    <div class="win-screen">
+      <div class="win-modal">
+        <h1>You Win!</h1>
+        <div class="win-buttons">
+          <button>Close</button> <button>Restart</button>
+        </div>
+      </div>
+      <div class="modal-background"></div>
+    </div>
     <!-- <script src="src/js/index.js"></script> -->
-    <script src="src/js/clickables.js"></script>
-    <script src="src/js/media-query.js"></script>
+    <script src="src/js/clickables.ts"></script>
+    <script src="src/js/media-query.ts"></script>
   </body>
 </html>

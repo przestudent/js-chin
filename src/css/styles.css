@@ -24,6 +24,60 @@ body {
   background-color: var(--border-color);
 }
 
+.win-screen {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.win-modal {
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
+  gap: 2rem;
+  opacity: 1;
+  background: var(--border-color);
+  padding: 1rem 2rem;
+  border-radius: 6px;
+}
+
+.modal-background {
+  position: fixed;
+  background: black;
+  opacity: 0.8;
+  height: 100%;
+  width: 100%;
+}
+
+.win-screen h1 {
+  text-align: center;
+  color: var(--background-default);
+}
+
+.win-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+.win-buttons button {
+  background: var(--background-default);
+  color: var(--border-color);
+  border: 2px solid gray;
+  cursor: pointer;
+  transition: transform ease 0.5s;
+}
+
+/* ! TODO: FIX IT SO ITS NICE */
+/* .win-buttons button:target {
+  border-color: aqua;
+  transform: border-color;
+} */
+
 /* #region modals */
 .display-none {
   display: none !important;
@@ -34,11 +88,11 @@ body {
   width: 100px;
   height: 100px;
   display: flex;
+  /* ? YOU COULD GIVE IT A  Z-INDEX IF IT AINT WORKING */
 }
 
 .game-info-top-left {
   position: absolute;
-  z-index: 9999;
   top: 0;
   left: 0;
 }
@@ -46,6 +100,7 @@ body {
 /* #endregion */
 /* #region game-wrapper */
 #game-wrapper {
+  position: absolute;
   background-color: white;
   display: grid;
   justify-items: center;
@@ -220,7 +275,13 @@ div.square.red {
   background-color: var(--border-color);
   width: var(--dice-button-size);
   height: var(--dice-button-size);
-  z-index: 9999;
+  /* z-index: 9999; */
+  transition: all ease 1s;
+}
+
+.dice:focus {
+  background-color: red;
+  transform: rotate(360deg);
 }
 
 /* #endregion */
@@ -237,7 +298,7 @@ div.square.red {
   height: 25rem;
   width: calc(var(--spawn-size) *1.7);
   border: 2px solid var(--border-color);
-  z-index: 9999;
+  /* z-index: 9999; */
 }
 
 .board-history-table thead {
@@ -354,8 +415,6 @@ table>tbody>tr>td:nth-child(2) {
   .board-history-wrapper {
     width: 100%;
   }
-
-
 
   .board-history {
     width: 100%;
