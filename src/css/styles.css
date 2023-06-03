@@ -7,8 +7,8 @@
   --spawn-size: 7rem;
   --dice-button-size: 2rem;
   --column-size: 7vw;
-  --pawn-width: 1.1rem;
-  --pawn-height: 1.1rem;
+  --pawn-width: 1.8rem;
+  --pawn-height: 1.8rem;
 
   --font-inter: 'Inter', sans-serif;
   --font-oxygen: 'Oxygen', sans-serif;
@@ -25,13 +25,6 @@ body {
 }
 
 /* #region modals */
-.modal-wrapper {
-  position: absolute;
-  display: flex;
-  height: 100%;
-  align-items: center;
-}
-
 .display-none {
   display: none !important;
 }
@@ -203,9 +196,18 @@ body {
   background-color: rgb(255, 255, 126);
 }
 
+div.square.red {
+  background-color: rgb(139, 29, 29);
+}
+
 /* #endregion  */
 
 /* #region bottom-dice */
+.dice-before-text {
+  width: 10rem;
+}
+
+
 .dice-wrapper {
   display: flex;
   justify-content: center;
