@@ -129,7 +129,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ColorWinLane = exports.SquareInsides = void 0;
+exports.ClearBoardHistory = exports.AppendBoardHistory = exports.ColorWinLane = exports.TurnOnDice = exports.SquareInsides = void 0;
 var SquareInsides = /*#__PURE__*/function () {
   function SquareInsides() {
     _classCallCheck(this, SquareInsides);
@@ -159,6 +159,15 @@ var SquareInsides = /*#__PURE__*/function () {
   return SquareInsides;
 }();
 exports.SquareInsides = SquareInsides;
+var dices = document.querySelectorAll(".dice-throw>i");
+dices[0].style.visibility = "visible";
+function TurnOnDice(i) {
+  dices.forEach(function (e) {
+    e.style.visibility = "hidden";
+  });
+  dices[i - 1].style.visibility = "visible";
+}
+exports.TurnOnDice = TurnOnDice;
 function WinLaneConstructor(color) {
   var arr = Array.from(document.querySelectorAll("[data-win".concat(color, "]")));
   arr.sort(function (a, b) {
@@ -175,32 +184,35 @@ function ColorWinLane() {
   };
 }
 exports.ColorWinLane = ColorWinLane;
-},{}],"src/js/dices.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.TurnOnDice = void 0;
-var dices = document.querySelectorAll(".dice-throw>i");
-dices[0].style.visibility = "visible";
-function TurnOnDice(i) {
-  dices.forEach(function (e) {
-    e.style.visibility = "hidden";
-  });
-  dices[i - 1].style.visibility = "visible";
+var moveCount = 0;
+var boardHistory = document.querySelector(".board-history-table>tbody");
+function AppendBoardHistory(color, diceThrow) {
+  moveCount++;
+  var tableRow = document.createElement("tr");
+  tableRow.innerHTML = "<td>".concat(moveCount, "</td><td style=\"--player-color:").concat(color, "\">").concat(color, "</td><td>").concat(diceThrow, "</td>");
+  if (!boardHistory.children.length) {
+    boardHistory.appendChild(tableRow);
+  } else {
+    boardHistory.insertBefore(tableRow, boardHistory.children[0]);
+  }
 }
-exports.TurnOnDice = TurnOnDice;
+exports.AppendBoardHistory = AppendBoardHistory;
+function ClearBoardHistory() {
+  boardHistory.innerHTML = "";
+  moveCount = 0;
+}
+exports.ClearBoardHistory = ClearBoardHistory;
 },{}],"src/js/clickables.ts":[function(require,module,exports) {
 "use strict";
 
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 var initialiser_1 = require("./initialiser");
-var dices_1 = require("./dices");
 var colors = ["red", "blue", "green", "yellow"];
-var diceThrow = 0;
 var roadToWin = 39;
 var colorOrder = {
   red: "blue",
@@ -208,17 +220,18 @@ var colorOrder = {
   green: "yellow",
   yellow: "red"
 };
-var playerColor = "red";
-var moveCount = 0;
+var initDiceThrow = 6;
+var diceThrow = initDiceThrow;
+var initColor = "red";
+var playerColor = initColor;
 // #region
-var boardHistory = document.querySelector(".board-history-table>tbody");
 var playableSquares = Array.from(document.querySelectorAll(".square[data-index]")).sort(function (a, b) {
   return parseInt(a.dataset.index) - parseInt(b.dataset.index);
 });
-var boardPlayArray = new Array(40);
-for (var i = 0; i < playableSquares.length; i++) {
-  boardPlayArray[i] = new initialiser_1.SquareInsides();
-}
+// const boardPlayArray = new Array<SquareInsides>(40);
+// for (let i = 0; i < playableSquares.length; i++) {
+//   boardPlayArray[i] = new SquareInsides();
+// }
 var colorWin = document.querySelector(".black");
 var playerColorShow = document.querySelector(".player");
 var colorWinLane = (0, initialiser_1.ColorWinLane)();
@@ -255,6 +268,12 @@ var colorFinishedPawns = {
 var placePawn = document.querySelector(".place-pawn");
 var placeSkip = document.querySelector(".place-skip");
 var placeInfo = document.querySelector(".game-info");
+document.querySelector(".close-modal").addEventListener("click", CloseModal);
+function CloseModal() {
+  document.querySelector(".win-screen").classList.add("display-none");
+}
+var buttonRestart = document.querySelector(".button-restart");
+buttonRestart.addEventListener("click", KillAllPawns);
 var dice = document.querySelector(".dice");
 var diceText = document.querySelector(".dice-before-text");
 var diceReady = true;
@@ -265,6 +284,7 @@ var colorPawn = {
   green: Array.from(document.querySelectorAll("[data-pawn=green]")),
   yellow: Array.from(document.querySelectorAll("[data-pawn=yellow]"))
 };
+// #endregion
 function TogglePawnAndDice() {
   diceReady = !diceReady;
   pickPawn = !pickPawn;
@@ -274,18 +294,19 @@ function TogglePawnAndDice() {
     diceText.innerText = "Not Ready";
   }
   if (diceReady) {
-    console.log(diceReady);
     dice.focus();
   }
 }
 function NextIdx(currIdx) {
-  return (currIdx + diceThrow) % boardPlayArray.length;
+  return (currIdx + diceThrow) % playableSquares.length;
 }
 function CheckAndHandleWin(color) {
   var _a, _b;
-  if (((_a = colorFinishedPawns[color]) === null || _a === void 0 ? void 0 : _a.childElementCount) === 4) {
+  if (((_a = colorFinishedPawns[color]) === null || _a === void 0 ? void 0 : _a.childElementCount) === 1) {
     console.log("WIN");
+    dice.removeEventListener("click", DiceClick);
     (_b = document.querySelector(".win-screen")) === null || _b === void 0 ? void 0 : _b.classList.remove("display-none");
+    buttonRestart.focus();
     diceReady = false;
     pickPawn = false;
   }
@@ -319,8 +340,8 @@ function PawnHandler(color_) {
       }
       BoardCleanUp(idx, nextIdx, color_, this);
       TogglePawnAndDice();
-      console.log(playableSquares);
-      console.log(boardPlayArray);
+      //console.log(playableSquares);
+      //console.log(boardPlayArray);
     }
   };
   // ! TODO: ADD HISTORY APPEND
@@ -332,7 +353,7 @@ function BoardCleanUp(currIdx) {
   var pawnElement = arguments.length > 3 ? arguments[3] : undefined;
   var winLane = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
   if (winLane) {
-    boardPlayArray[currIdx].removePawn(0);
+    //boardPlayArray[currIdx].removePawn(0);
     var steps = currIdx - parseInt(colorEnd[color]) + diceThrow;
     if (steps > 4) {
       if (pawnElement.parentElement) {
@@ -348,8 +369,8 @@ function BoardCleanUp(currIdx) {
     }
     return;
   }
-  boardPlayArray[currIdx].removePawn(0);
-  boardPlayArray[nextIdx].addPawn(color);
+  //boardPlayArray[currIdx].removePawn(0);
+  //boardPlayArray[nextIdx].addPawn(color);
   if (pawnElement.parentElement) {
     playableSquares[nextIdx].appendChild(RemoveChildFromAnElement(pawnElement.parentElement));
   } else {
@@ -368,7 +389,7 @@ function SwitchToLane(currIdx, nextIdx, color) {
 function SpawnCallback(colorSpawn, color) {
   return function (e) {
     if (pickPawn && diceThrow === 6 && colorSpawn.childElementCount > 0 && playerColor == color) {
-      var removedPawnFromSpawn = colorSpawn.removeChild(colorSpawn.firstElementChild);
+      var removedPawnFromSpawn = colorSpawn.removeChild(colorSpawn.lastElementChild);
       var startIndex = parseInt(colorStart[playerColor]);
       removedPawnFromSpawn.addEventListener("click", PawnHandler(color));
       playableSquares[startIndex].appendChild(removedPawnFromSpawn);
@@ -383,31 +404,56 @@ for (var _i = 0, _colors = colors; _i < _colors.length; _i++) {
   var colorSpawn = colorPawnsSpawn[color];
   colorSpawn.addEventListener("click", SpawnCallback(colorSpawn, color));
 }
-dice.addEventListener("click", function (e) {
+// ! TODO FIX IT SO YOU CANT CLICK THE DICE
+dice.addEventListener("click", DiceClick);
+function DiceClick(e) {
   if (diceReady) {
     diceThrow = 6; //! PLACE FOR THE CHANGE OF DICE THROW
-    AppendBoardHistory();
-    (0, dices_1.TurnOnDice)(diceThrow);
+    (0, initialiser_1.AppendBoardHistory)(playerColor, diceThrow);
+    (0, initialiser_1.TurnOnDice)(diceThrow);
     TogglePawnAndDice();
   } else {
     console.log("YOU ARE NOT SUPPOSED TO THROW THE DICE YET");
   }
   this.focus();
-});
+}
 function RemoveChildFromAnElement(parent) {
-  return parent.removeChild(parent.firstElementChild);
+  return parent.removeChild(parent.lastElementChild);
 }
-function AppendBoardHistory() {
-  moveCount++;
-  var tableRow = document.createElement("tr");
-  tableRow.innerHTML = "<td>".concat(moveCount, "</td><td style=\"--player-color:").concat(playerColor, "\">").concat(playerColor, "</td><td>").concat(diceThrow, "</td>");
-  if (!boardHistory.children.length) {
-    boardHistory.appendChild(tableRow);
-  } else {
-    boardHistory.insertBefore(tableRow, boardHistory.children[0]);
+function KillAllPawns() {
+  var _iterator = _createForOfIteratorHelper(colors),
+    _step;
+  try {
+    var _loop = function _loop() {
+      var color = _step.value;
+      var spawnForColor = colorPawnsSpawn[color];
+      var pawnOfColor = Array.from(document.querySelectorAll("[data-pawn=".concat(color, "]")));
+      pawnOfColor.forEach(function (e) {
+        var _a;
+        (_a = e.parentElement) === null || _a === void 0 ? void 0 : _a.removeChild(e);
+        e.removeEventListener("click", PawnHandler(color));
+        console.log(e);
+      });
+      spawnForColor.append.apply(spawnForColor, pawnOfColor);
+    };
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      _loop();
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
   }
+  CloseModal();
+  (0, initialiser_1.ClearBoardHistory)();
+  playerColor = initColor;
+  diceThrow = initDiceThrow;
+  diceReady = true;
+  pickPawn = false;
+  diceText.innerText = "Ready";
+  dice.addEventListener("click", DiceClick);
 }
-},{"./initialiser":"src/js/initialiser.ts","./dices":"src/js/dices.ts"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./initialiser":"src/js/initialiser.ts"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -432,7 +478,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62565" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51402" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
