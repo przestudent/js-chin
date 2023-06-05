@@ -41,12 +41,7 @@ const playableSquares = Array.from(
 const colorWin = document.querySelector(".black") as Element;
 const playerColorShow = document.querySelector(".player") as Element;
 const colorWinLane = ColorWinLane();
-const colorLaneArray: { [color in possibleColors]: possibleColors[] } = {
-  red: new Array(4).fill(""),
-  green: new Array(4).fill(""),
-  yellow: new Array(4).fill(""),
-  blue: new Array(4).fill(""),
-};
+
 const colorEnd: { [color in possibleColors]: string } = {
   red: (document.querySelector<HTMLElement>("[data-end=red]") as HTMLElement)
     .dataset.index as string,
@@ -85,15 +80,7 @@ const placePawn = document.querySelector(".place-pawn");
 const placeSkip = document.querySelector(".place-skip");
 const placeInfo = document.querySelector(".game-info");
 
-(
-  document.querySelector<HTMLButtonElement>(".close-modal") as HTMLButtonElement
-).addEventListener("click", CloseModal);
-function CloseModal() {
-  (document.querySelector(".win-screen") as HTMLElement).classList.add(
-    "display-none"
-  );
-}
-
+document.querySelector<HTMLDialogElement>("#win-modal")?.showModal();
 const buttonRestart = document.querySelector(
   ".button-restart"
 ) as HTMLButtonElement;
@@ -105,15 +92,20 @@ const dice = document.querySelector<HTMLButtonElement>(
 const diceText = document.querySelector<HTMLElement>(
   ".dice-before-text"
 ) as HTMLElement;
+const winModal = document.querySelector("#win-modal") as HTMLDialogElement;
+
+document
+  .querySelector<HTMLButtonElement>(".close-modal")
+  ?.addEventListener("click", ModalCloser);
+
+buttonRestart.addEventListener("click", ModalCloser);
+function ModalCloser() {
+  winModal.close();
+}
 
 let diceReady = true;
 let pickPawn = false;
-const colorPawn = {
-  red: Array.from(document.querySelectorAll(`[data-pawn=red]`)),
-  blue: Array.from(document.querySelectorAll(`[data-pawn=blue]`)),
-  green: Array.from(document.querySelectorAll(`[data-pawn=green]`)),
-  yellow: Array.from(document.querySelectorAll(`[data-pawn=yellow]`)),
-};
+
 // #endregion
 function TogglePawnAndDice() {
   diceReady = !diceReady;
@@ -316,7 +308,6 @@ function KillAllPawns() {
     });
     spawnForColor.append(...pawnOfColor);
   }
-  CloseModal();
   ClearBoardHistory();
   playerColor = initColor;
   diceThrow = initDiceThrow;

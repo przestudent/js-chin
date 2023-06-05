@@ -24,19 +24,7 @@ body {
   background-color: var(--border-color);
 }
 
-.win-screen {
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.win-modal {
-  animation: win-modal-slide-in 1s ease 0.2s;
-  animation-fill-mode: both;
-  z-index: 9999;
+dialog#win-modal[open] {
   display: flex;
   flex-direction: column;
   align-content: space-between;
@@ -46,39 +34,45 @@ body {
   border-radius: 6px;
 }
 
-@keyframes background-dim {
+.modal {
+  position: fixed;
+  top: 50%;
+  animation: win-modal-slide-in 1s ease 0.2s both;
+  z-index: 9999;
+}
+
+dialog[open]::backdrop {
+  animation: backdrop-opacity 1s ease 0.2s both;
+}
+
+@keyframes backdrop-opacity {
   from {
     opacity: 0;
+    background: black;
   }
 
   to {
-    opacity: 0.6;
+    opacity: 0.4;
+    background: red;
   }
 }
 
 @keyframes win-modal-slide-in {
   from {
-    transform: translateY(-90px);
+    transform: translateY(-150%);
     opacity: 0;
   }
 
   to {
-    transform: translateY(0px);
+    transform: translateY(-50%);
     opacity: 1;
   }
 
 }
 
-.modal-background {
-  position: fixed;
-  background: black;
-  animation: background-dim 1s ease 0.2s;
-  animation-fill-mode: both;
-  height: 100%;
-  width: 100%;
-}
 
-.win-screen h1 {
+
+#win-modal h1 {
   text-align: center;
   color: var(--background-default);
 }
@@ -136,7 +130,7 @@ body {
   display: grid;
   justify-items: center;
   grid-template-columns: 1fr 1fr 1fr;
-  height: 100%;
+
 }
 
 .column {

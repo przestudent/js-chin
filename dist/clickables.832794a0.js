@@ -212,6 +212,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+var _a, _b;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -239,12 +240,6 @@ var playableSquares = Array.from(document.querySelectorAll(".square[data-index]"
 var colorWin = document.querySelector(".black");
 var playerColorShow = document.querySelector(".player");
 var colorWinLane = (0, initialiser_1.ColorWinLane)();
-var colorLaneArray = {
-  red: new Array(4).fill(""),
-  green: new Array(4).fill(""),
-  yellow: new Array(4).fill(""),
-  blue: new Array(4).fill("")
-};
 var colorEnd = {
   red: document.querySelector("[data-end=red]").dataset.index,
   blue: document.querySelector("[data-end=blue]").dataset.index,
@@ -272,22 +267,19 @@ var colorFinishedPawns = {
 var placePawn = document.querySelector(".place-pawn");
 var placeSkip = document.querySelector(".place-skip");
 var placeInfo = document.querySelector(".game-info");
-document.querySelector(".close-modal").addEventListener("click", CloseModal);
-function CloseModal() {
-  document.querySelector(".win-screen").classList.add("display-none");
-}
+(_a = document.querySelector("#win-modal")) === null || _a === void 0 ? void 0 : _a.showModal();
 var buttonRestart = document.querySelector(".button-restart");
 buttonRestart.addEventListener("click", KillAllPawns);
 var dice = document.querySelector(".dice");
 var diceText = document.querySelector(".dice-before-text");
+var winModal = document.querySelector("#win-modal");
+(_b = document.querySelector(".close-modal")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", ModalCloser);
+buttonRestart.addEventListener("click", ModalCloser);
+function ModalCloser() {
+  winModal.close();
+}
 var diceReady = true;
 var pickPawn = false;
-var colorPawn = {
-  red: Array.from(document.querySelectorAll("[data-pawn=red]")),
-  blue: Array.from(document.querySelectorAll("[data-pawn=blue]")),
-  green: Array.from(document.querySelectorAll("[data-pawn=green]")),
-  yellow: Array.from(document.querySelectorAll("[data-pawn=yellow]"))
-};
 // #endregion
 function TogglePawnAndDice() {
   diceReady = !diceReady;
@@ -477,7 +469,6 @@ function KillAllPawns() {
   } finally {
     _iterator.f();
   }
-  CloseModal();
   (0, initialiser_1.ClearBoardHistory)();
   playerColor = initColor;
   diceThrow = initDiceThrow;
@@ -511,7 +502,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53624" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50976" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

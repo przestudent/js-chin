@@ -189,16 +189,22 @@
       </div>
     </div>
     <!-- display-none here -->
-    <div class="win-screen">
-      <div class="win-modal">
+    <!-- <div class="win-screen">
+      <dialog class="win-modal">
         <h1>You Win!</h1>
         <div class="win-buttons">
           <button class="close-modal">Close</button>
           <button class="button-restart">Restart</button>
         </div>
+      </dialog>
+    </div> -->
+    <dialog id="win-modal" class="modal">
+      <h1>You Win!</h1>
+      <div class="win-buttons">
+        <button class="close-modal">Close</button>
+        <button class="button-restart">Restart</button>
       </div>
-      <div class="modal-background"></div>
-    </div>
+    </dialog>
     <!-- <script src="src/js/index.js"></script> -->
     <script src="src/js/clickables.ts"></script>
     <script src="src/js/media-query.ts"></script>
