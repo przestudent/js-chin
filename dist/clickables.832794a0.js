@@ -206,7 +206,11 @@ exports.ClearBoardHistory = ClearBoardHistory;
 "use strict";
 
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -314,8 +318,11 @@ function CheckAndHandleWin(color) {
 function PawnHandler(color_) {
   return function HOHandler(e) {
     var _a;
+    // * Check if we can move the pawn
     if (playerColor == color_ && pickPawn) {
       var dataSetIndex = this.parentElement.dataset["win".concat(color_)];
+      // * Check if we are on the lane and if we win
+      playerColor = colorOrder[color_];
       if (dataSetIndex !== undefined) {
         if (this.parentElement) {
           var removedPawn = this.parentElement.removeChild(this);
@@ -330,6 +337,7 @@ function PawnHandler(color_) {
         TogglePawnAndDice();
         return;
       }
+      // * We are not on lane
       var idx = parseInt(this.parentElement.dataset.index);
       var nextIdx = NextIdx(idx);
       if (SwitchToLane(idx, nextIdx, color_)) {
@@ -338,6 +346,7 @@ function PawnHandler(color_) {
         TogglePawnAndDice();
         return;
       }
+      // * we are on the board
       BoardCleanUp(idx, nextIdx, color_, this);
       TogglePawnAndDice();
       //console.log(playableSquares);
@@ -371,8 +380,11 @@ function BoardCleanUp(currIdx) {
   }
   //boardPlayArray[currIdx].removePawn(0);
   //boardPlayArray[nextIdx].addPawn(color);
+  // ! we need to kill pawns
   if (pawnElement.parentElement) {
-    playableSquares[nextIdx].appendChild(RemoveChildFromAnElement(pawnElement.parentElement));
+    var movedPawn = RemoveChildFromAnElement(pawnElement.parentElement);
+    playableSquares[nextIdx].appendChild(movedPawn);
+    CheckAndKillEnemyPawns(nextIdx, color);
   } else {
     console.log("no parent");
   }
@@ -393,9 +405,10 @@ function SpawnCallback(colorSpawn, color) {
       var startIndex = parseInt(colorStart[playerColor]);
       removedPawnFromSpawn.addEventListener("click", PawnHandler(color));
       playableSquares[startIndex].appendChild(removedPawnFromSpawn);
+      CheckAndKillEnemyPawns(startIndex, color);
       TogglePawnAndDice();
     } else {
-      console.log("YOU CANT PICK A PAWN WITHOUT A 6");
+      console.log("you gavbe to throw 6 to move");
     }
   };
 }
@@ -404,11 +417,31 @@ for (var _i = 0, _colors = colors; _i < _colors.length; _i++) {
   var colorSpawn = colorPawnsSpawn[color];
   colorSpawn.addEventListener("click", SpawnCallback(colorSpawn, color));
 }
+function CheckAndKillEnemyPawns(idx, color) {
+  var _a;
+  if (playableSquares[idx].firstElementChild) {
+    var nextIdxSquare = playableSquares[idx];
+    var enemyPawn = nextIdxSquare.firstElementChild;
+    if (enemyPawn instanceof HTMLElement && ((_a = enemyPawn.dataset) === null || _a === void 0 ? void 0 : _a.pawn) === color) {
+      var _colorPawnsSpawn$enem;
+      console.log("enemy");
+      var enemyPawnColor = enemyPawn.dataset.pawn;
+      Array.from(nextIdxSquare.children).forEach(function (child) {
+        child.removeEventListener("click", PawnHandler(enemyPawnColor));
+      });
+      (_colorPawnsSpawn$enem = colorPawnsSpawn[enemyPawnColor]).append.apply(_colorPawnsSpawn$enem, _toConsumableArray(nextIdxSquare.children));
+    } else {
+      console.log("its our pawn, do nofin");
+    }
+  } else {
+    console.log("no children, we can proceed");
+  }
+}
 // ! TODO FIX IT SO YOU CANT CLICK THE DICE
 dice.addEventListener("click", DiceClick);
 function DiceClick(e) {
   if (diceReady) {
-    diceThrow = 6; //! PLACE FOR THE CHANGE OF DICE THROW
+    diceThrow = Math.floor(Math.random() * 6) + 1; //! PLACE FOR THE CHANGE OF DICE THROW
     (0, initialiser_1.AppendBoardHistory)(playerColor, diceThrow);
     (0, initialiser_1.TurnOnDice)(diceThrow);
     TogglePawnAndDice();
@@ -478,7 +511,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51402" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53624" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

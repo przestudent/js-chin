@@ -113,19 +113,24 @@ body {
   border: 2px solid var(--border-color);
   width: 100px;
   height: 100px;
-  display: flex;
-  /* ? YOU COULD GIVE IT A  Z-INDEX IF IT AINT WORKING */
+  display: grid;
+  grid-template-rows: 1fr 1fr;
 }
 
 .game-info-top-left {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
+}
+
+.game-info button {
+  background-color: aqua;
 }
 
 /* #endregion */
 /* #region game-wrapper */
 #game-wrapper {
+  width: 100%;
   position: absolute;
   background-color: white;
   display: grid;
@@ -154,6 +159,8 @@ body {
 .column-middle {
   order: 2;
   grid-column: span 1;
+  display: grid;
+  grid-template-columns: 1fr;
 }
 
 /* #endregion */
@@ -405,6 +412,8 @@ table>tbody>tr>td:nth-child(2) {
   }
 
   #game-wrapper {
+
+
     grid-template-columns: 1fr 1fr;
     justify-items: center;
   }

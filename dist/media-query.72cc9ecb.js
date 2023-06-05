@@ -122,13 +122,14 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
 var mediaQueryListener = window.matchMedia("(max-width:970px)");
 var columnRight = document.querySelector(".column-right");
-//const columnLeft = document.querySelector(".column-left") as Element;
+var columnLeft = document.querySelector(".column-left");
 var historyScroll = document.querySelector(".board-history-wrapper");
 var gameWrapper = document.querySelector("#game-wrapper");
 var pawnsGreen = document.querySelector(".container-green");
-//const pawnsYellow = document.querySelector(".container-yellow") as Element;
-//const gameInfo = document.querySelector(".game-info") as Element;
-//const body = document.querySelector("body") as HTMLBodyElement;
+var pawnsYellow = document.querySelector(".container-yellow");
+var gameInfo = document.querySelector(".game-info");
+var body = document.querySelector("body");
+var winScreen = document.querySelector(".win-screen");
 var isMobile = false;
 mediaQueryListener.addEventListener("change", function (e) {
   console.log("yes");
@@ -138,10 +139,10 @@ mediaQueryListener.addEventListener("change", function (e) {
     if (isMobile) {
       isMobile = false;
       historyScroll.classList.remove("wide-history");
-      // gameInfo.classList.remove("game-info-top-left");
+      gameInfo.classList.remove("game-info-top-left");
       var removedHistoryWrapper = gameWrapper.removeChild(historyScroll);
-      //const removedGameInfo = body.removeChild(gameInfo);
-      // columnLeft.insertBefore(removedGameInfo, pawnsYellow);
+      var removedGameInfo = body.removeChild(gameInfo);
+      columnLeft.insertBefore(removedGameInfo, pawnsYellow);
       columnRight.insertBefore(removedHistoryWrapper, pawnsGreen);
     }
   }
@@ -151,14 +152,13 @@ if (mediaQueryListener.matches) {
 }
 function ScreenChangeToMobile() {
   isMobile = true;
-  // const removedGameInfo = columnLeft.removeChild(gameInfo);
+  var removedGameInfo = columnLeft.removeChild(gameInfo);
   var removedHistoryWrapper = columnRight.removeChild(historyScroll);
   removedHistoryWrapper.classList.add("wide-history");
-  // removedGameInfo.classList.add("game-info-top-left");
-  // body.appendChild(removedGameInfo);
+  removedGameInfo.classList.add("game-info-top-left");
+  body.insertBefore(removedGameInfo, winScreen);
   gameWrapper.appendChild(removedHistoryWrapper);
 }
-// TODO: ADD DYNAMIC LAYOUT SHIFT, YOU KNOW ;P
 },{}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -184,7 +184,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51402" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53624" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
