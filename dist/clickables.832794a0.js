@@ -120,42 +120,30 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 })({"src/js/initialiser.ts":[function(require,module,exports) {
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.ClearBoardHistory = exports.AppendBoardHistory = exports.ColorWinLane = exports.TurnOnDice = exports.SquareInsides = void 0;
-var SquareInsides = /*#__PURE__*/function () {
+var SquareInsides = /** @class */function () {
   function SquareInsides() {
-    _classCallCheck(this, SquareInsides);
     this.colors = "";
     this.elements = 0;
     this.powerUp = null;
   }
-  _createClass(SquareInsides, [{
-    key: "addPawn",
-    value: function addPawn(color) {
-      this.elements++;
-      this.colors = color;
+  SquareInsides.prototype.addPawn = function (color) {
+    this.elements++;
+    this.colors = color;
+  };
+  SquareInsides.prototype.removePawn = function (idx) {
+    // RemoveChildFromAnElement(playableSquares[idx])
+    // * TODO: CONSIDER PUTTING IT HERE
+    if (this.elements) {
+      this.elements--;
     }
-  }, {
-    key: "removePawn",
-    value: function removePawn(idx) {
-      // RemoveChildFromAnElement(playableSquares[idx])
-      // * TODO: CONSIDER PUTTING IT HERE
-      if (this.elements) {
-        this.elements--;
-      }
-      if (this.elements <= 0) {
-        this.colors = "";
-      }
+    if (this.elements <= 0) {
+      this.colors = "";
     }
-  }]);
+  };
   return SquareInsides;
 }();
 exports.SquareInsides = SquareInsides;
@@ -169,9 +157,9 @@ function TurnOnDice(i) {
 }
 exports.TurnOnDice = TurnOnDice;
 function WinLaneConstructor(color) {
-  var arr = Array.from(document.querySelectorAll("[data-win".concat(color, "]")));
+  var arr = Array.from(document.querySelectorAll("[data-win" + color + "]"));
   arr.sort(function (a, b) {
-    return parseInt(a["dataset"]["win".concat(color)]) - parseInt(b["dataset"]["win".concat(color)]);
+    return parseInt(a["dataset"]["win" + color]) - parseInt(b["dataset"]["win" + color]);
   });
   return arr;
 }
@@ -189,7 +177,7 @@ var boardHistory = document.querySelector(".board-history-table>tbody");
 function AppendBoardHistory(color, diceThrow) {
   moveCount++;
   var tableRow = document.createElement("tr");
-  tableRow.innerHTML = "<td>".concat(moveCount, "</td><td style=\"--player-color:").concat(color, "\">").concat(color, "</td><td>").concat(diceThrow, "</td>");
+  tableRow.innerHTML = "<td>" + moveCount + "</td><td style=\"--player-color:" + color + "\">" + color + "</td><td>" + diceThrow + "</td>";
   if (!boardHistory.children.length) {
     boardHistory.appendChild(tableRow);
   } else {
@@ -205,14 +193,6 @@ exports.ClearBoardHistory = ClearBoardHistory;
 },{}],"src/js/clickables.ts":[function(require,module,exports) {
 "use strict";
 
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-var _a, _b;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -240,6 +220,12 @@ var playableSquares = Array.from(document.querySelectorAll(".square[data-index]"
 var colorWin = document.querySelector(".black");
 var playerColorShow = document.querySelector(".player");
 var colorWinLane = (0, initialiser_1.ColorWinLane)();
+var colorLaneArray = {
+  red: new Array(4).fill(""),
+  green: new Array(4).fill(""),
+  yellow: new Array(4).fill(""),
+  blue: new Array(4).fill("")
+};
 var colorEnd = {
   red: document.querySelector("[data-end=red]").dataset.index,
   blue: document.querySelector("[data-end=blue]").dataset.index,
@@ -266,20 +252,23 @@ var colorFinishedPawns = {
 };
 var placePawn = document.querySelector(".place-pawn");
 var placeSkip = document.querySelector(".place-skip");
-var placeInfo = document.querySelector(".game-info");
-(_a = document.querySelector("#win-modal")) === null || _a === void 0 ? void 0 : _a.showModal();
+var gameInfo = document.querySelector("#game-info");
+document.querySelector(".close-modal").addEventListener("click", CloseModal);
+function CloseModal() {
+  document.querySelector(".win-screen").classList.add("display-none");
+}
 var buttonRestart = document.querySelector(".button-restart");
 buttonRestart.addEventListener("click", KillAllPawns);
 var dice = document.querySelector(".dice");
 var diceText = document.querySelector(".dice-before-text");
-var winModal = document.querySelector("#win-modal");
-(_b = document.querySelector(".close-modal")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", ModalCloser);
-buttonRestart.addEventListener("click", ModalCloser);
-function ModalCloser() {
-  winModal.close();
-}
 var diceReady = true;
 var pickPawn = false;
+var colorPawn = {
+  red: Array.from(document.querySelectorAll("[data-pawn=red]")),
+  blue: Array.from(document.querySelectorAll("[data-pawn=blue]")),
+  green: Array.from(document.querySelectorAll("[data-pawn=green]")),
+  yellow: Array.from(document.querySelectorAll("[data-pawn=yellow]"))
+};
 // #endregion
 function TogglePawnAndDice() {
   diceReady = !diceReady;
@@ -312,9 +301,9 @@ function PawnHandler(color_) {
     var _a;
     // * Check if we can move the pawn
     if (playerColor == color_ && pickPawn) {
-      var dataSetIndex = this.parentElement.dataset["win".concat(color_)];
+      var dataSetIndex = this.parentElement.dataset["win" + color_];
       // * Check if we are on the lane and if we win
-      playerColor = colorOrder[color_];
+      //playerColor = colorOrder[color_];
       if (dataSetIndex !== undefined) {
         if (this.parentElement) {
           var removedPawn = this.parentElement.removeChild(this);
@@ -348,11 +337,13 @@ function PawnHandler(color_) {
   // ! TODO: ADD HISTORY APPEND
 }
 
-function BoardCleanUp(currIdx) {
-  var nextIdx = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : currIdx;
-  var color = arguments.length > 2 ? arguments[2] : undefined;
-  var pawnElement = arguments.length > 3 ? arguments[3] : undefined;
-  var winLane = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+function BoardCleanUp(currIdx, nextIdx, color, pawnElement, winLane) {
+  if (nextIdx === void 0) {
+    nextIdx = currIdx;
+  }
+  if (winLane === void 0) {
+    winLane = false;
+  }
   if (winLane) {
     //boardPlayArray[currIdx].removePawn(0);
     var steps = currIdx - parseInt(colorEnd[color]) + diceThrow;
@@ -384,6 +375,14 @@ function BoardCleanUp(currIdx) {
 // TODO: FIX IT SO WE HAVE A NICE FUNCTION THAT CHECKS FOR THE PARENT
 function SwitchToLane(currIdx, nextIdx, color) {
   // * TODO: make it pretty maybe
+  if (color === "blue") {
+    var blueTempEnd = [36, 37, 38, 39, 0, 1];
+    if (nextIdx > 1 && blueTempEnd.includes(currIdx)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   if (nextIdx > parseInt(colorEnd[color]) && currIdx < parseInt(colorEnd[color])) {
     return true;
   } else {
@@ -404,8 +403,8 @@ function SpawnCallback(colorSpawn, color) {
     }
   };
 }
-for (var _i = 0, _colors = colors; _i < _colors.length; _i++) {
-  var color = _colors[_i];
+for (var _i = 0, colors_1 = colors; _i < colors_1.length; _i++) {
+  var color = colors_1[_i];
   var colorSpawn = colorPawnsSpawn[color];
   colorSpawn.addEventListener("click", SpawnCallback(colorSpawn, color));
 }
@@ -414,14 +413,16 @@ function CheckAndKillEnemyPawns(idx, color) {
   if (playableSquares[idx].firstElementChild) {
     var nextIdxSquare = playableSquares[idx];
     var enemyPawn = nextIdxSquare.firstElementChild;
-    if (enemyPawn instanceof HTMLElement && ((_a = enemyPawn.dataset) === null || _a === void 0 ? void 0 : _a.pawn) === color) {
-      var _colorPawnsSpawn$enem;
-      console.log("enemy");
-      var enemyPawnColor = enemyPawn.dataset.pawn;
-      Array.from(nextIdxSquare.children).forEach(function (child) {
-        child.removeEventListener("click", PawnHandler(enemyPawnColor));
-      });
-      (_colorPawnsSpawn$enem = colorPawnsSpawn[enemyPawnColor]).append.apply(_colorPawnsSpawn$enem, _toConsumableArray(nextIdxSquare.children));
+    console.log(enemyPawn);
+    if (enemyPawn instanceof HTMLElement && enemyPawn) {
+      if (enemyPawn.dataset.pawn !== undefined && enemyPawn.dataset.pawn !== color) {
+        console.log("enemy");
+        var enemyPawnColor_1 = enemyPawn.dataset.pawn;
+        Array.from(nextIdxSquare.children).forEach(function (child) {
+          child.removeEventListener("click", PawnHandler(enemyPawnColor_1));
+        });
+        (_a = colorPawnsSpawn[enemyPawnColor_1]).append.apply(_a, nextIdxSquare.children);
+      }
     } else {
       console.log("its our pawn, do nofin");
     }
@@ -434,41 +435,50 @@ dice.addEventListener("click", DiceClick);
 function DiceClick(e) {
   if (diceReady) {
     diceThrow = Math.floor(Math.random() * 6) + 1; //! PLACE FOR THE CHANGE OF DICE THROW
+    console.log(dice.getAttribute("--color-show"));
+    console.log(dice);
+    console.log(this.hasAttribute("background-color"));
+    this.style.setProperty("--color-show", playerColor);
     (0, initialiser_1.AppendBoardHistory)(playerColor, diceThrow);
     (0, initialiser_1.TurnOnDice)(diceThrow);
     TogglePawnAndDice();
+    if (diceThrow !== 6 && colorPawnsSpawn[playerColor].childElementCount + colorFinishedPawns[playerColor].childElementCount === 4) {
+      gameInfo.classList.remove("game-info-out");
+      gameInfo.classList.add("game-info-in");
+      placePawn.addEventListener("click", PassYourTurn);
+    }
   } else {
     console.log("YOU ARE NOT SUPPOSED TO THROW THE DICE YET");
   }
   this.focus();
 }
+function PassYourTurn() {
+  this.removeEventListener("click", PassYourTurn);
+  gameInfo.classList.add("game-info-out");
+  gameInfo.classList.remove("game-info-in");
+  TogglePawnAndDice();
+  playerColor = colorOrder[playerColor];
+}
 function RemoveChildFromAnElement(parent) {
   return parent.removeChild(parent.lastElementChild);
 }
 function KillAllPawns() {
-  var _iterator = _createForOfIteratorHelper(colors),
-    _step;
-  try {
-    var _loop = function _loop() {
-      var color = _step.value;
-      var spawnForColor = colorPawnsSpawn[color];
-      var pawnOfColor = Array.from(document.querySelectorAll("[data-pawn=".concat(color, "]")));
-      pawnOfColor.forEach(function (e) {
-        var _a;
-        (_a = e.parentElement) === null || _a === void 0 ? void 0 : _a.removeChild(e);
-        e.removeEventListener("click", PawnHandler(color));
-        console.log(e);
-      });
-      spawnForColor.append.apply(spawnForColor, pawnOfColor);
-    };
-    for (_iterator.s(); !(_step = _iterator.n()).done;) {
-      _loop();
-    }
-  } catch (err) {
-    _iterator.e(err);
-  } finally {
-    _iterator.f();
+  var _loop_1 = function _loop_1(color) {
+    var spawnForColor = colorPawnsSpawn[color];
+    var pawnOfColor = Array.from(document.querySelectorAll("[data-pawn=" + color + "]"));
+    pawnOfColor.forEach(function (e) {
+      var _a;
+      (_a = e.parentElement) === null || _a === void 0 ? void 0 : _a.removeChild(e);
+      e.removeEventListener("click", PawnHandler(color));
+      console.log(e);
+    });
+    spawnForColor.append.apply(spawnForColor, pawnOfColor);
+  };
+  for (var _i = 0, colors_2 = colors; _i < colors_2.length; _i++) {
+    var color = colors_2[_i];
+    _loop_1(color);
   }
+  CloseModal();
   (0, initialiser_1.ClearBoardHistory)();
   playerColor = initColor;
   diceThrow = initDiceThrow;
@@ -502,7 +512,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50976" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63035" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

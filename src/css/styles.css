@@ -36,7 +36,6 @@ dialog#win-modal[open] {
 
 .modal {
   position: fixed;
-  top: 50%;
   animation: win-modal-slide-in 1s ease 0.2s both;
   z-index: 9999;
 }
@@ -64,7 +63,7 @@ dialog[open]::backdrop {
   }
 
   to {
-    transform: translateY(-50%);
+    transform: translateY(0%);
     opacity: 1;
   }
 
@@ -103,21 +102,53 @@ dialog[open]::backdrop {
   display: none !important;
 }
 
-.game-info {
+#game-info {
   border: 2px solid var(--border-color);
   width: 100px;
   height: 100px;
   display: grid;
-  grid-template-rows: 1fr 1fr;
+  transform: translateX(-200%);
 }
 
-.game-info-top-left {
+.game-info-in {
+  animation: slide-in-left-pass 1s ease alternate both;
+}
+
+.game-info-out {
+  animation: slide-out-left 1s ease alternate both !important;
+}
+
+@keyframes slide-out-left {
+  0% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(-200%);
+    opacity: 0;
+  }
+}
+
+@keyframes slide-in-left-pass {
+  0% {
+    transform: translateX(-200%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+#game-info-top-left {
   position: fixed;
   top: 0;
   left: 0;
 }
 
-.game-info button {
+#game-info button {
   background-color: aqua;
 }
 
@@ -299,15 +330,14 @@ div.square.red {
 }
 
 .dice {
-  background-color: var(--border-color);
   width: var(--dice-button-size);
   height: var(--dice-button-size);
-  /* z-index: 9999; */
-  transition: all ease 1s;
+  --color-show: red;
+  background-color: var(--color-show);
+  transition: transform ease 1s;
 }
 
 .dice:focus {
-  background-color: red;
   transform: rotate(360deg);
 }
 

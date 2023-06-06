@@ -41,7 +41,12 @@ const playableSquares = Array.from(
 const colorWin = document.querySelector(".black") as Element;
 const playerColorShow = document.querySelector(".player") as Element;
 const colorWinLane = ColorWinLane();
-
+const colorLaneArray: { [color in possibleColors]: possibleColors[] } = {
+  red: new Array(4).fill(""),
+  green: new Array(4).fill(""),
+  yellow: new Array(4).fill(""),
+  blue: new Array(4).fill(""),
+};
 const colorEnd: { [color in possibleColors]: string } = {
   red: (document.querySelector<HTMLElement>("[data-end=red]") as HTMLElement)
     .dataset.index as string,
@@ -76,11 +81,19 @@ const colorFinishedPawns = {
   blue: document.querySelector(".finished-pawns-blue") as HTMLElement,
   yellow: document.querySelector(".finished-pawns-yellow") as HTMLElement,
 };
-const placePawn = document.querySelector(".place-pawn");
+const placePawn = document.querySelector(".place-pawn") as HTMLElement;
 const placeSkip = document.querySelector(".place-skip");
-const placeInfo = document.querySelector(".game-info");
+const gameInfo = document.querySelector("#game-info") as HTMLElement;
 
-document.querySelector<HTMLDialogElement>("#win-modal")?.showModal();
+(
+  document.querySelector<HTMLButtonElement>(".close-modal") as HTMLButtonElement
+).addEventListener("click", CloseModal);
+function CloseModal() {
+  (document.querySelector(".win-screen") as HTMLElement).classList.add(
+    "display-none"
+  );
+}
+
 const buttonRestart = document.querySelector(
   ".button-restart"
 ) as HTMLButtonElement;
@@ -92,20 +105,15 @@ const dice = document.querySelector<HTMLButtonElement>(
 const diceText = document.querySelector<HTMLElement>(
   ".dice-before-text"
 ) as HTMLElement;
-const winModal = document.querySelector("#win-modal") as HTMLDialogElement;
-
-document
-  .querySelector<HTMLButtonElement>(".close-modal")
-  ?.addEventListener("click", ModalCloser);
-
-buttonRestart.addEventListener("click", ModalCloser);
-function ModalCloser() {
-  winModal.close();
-}
 
 let diceReady = true;
 let pickPawn = false;
-
+const colorPawn = {
+  red: Array.from(document.querySelectorAll(`[data-pawn=red]`)),
+  blue: Array.from(document.querySelectorAll(`[data-pawn=blue]`)),
+  green: Array.from(document.querySelectorAll(`[data-pawn=green]`)),
+  yellow: Array.from(document.querySelectorAll(`[data-pawn=yellow]`)),
+};
 // #endregion
 function TogglePawnAndDice() {
   diceReady = !diceReady;
@@ -140,7 +148,7 @@ function PawnHandler(color_: possibleColors) {
         `win${color_}`
       ];
       // * Check if we are on the lane and if we win
-      playerColor = colorOrder[color_];
+      //playerColor = colorOrder[color_];
       if (dataSetIndex !== undefined) {
         if (this.parentElement) {
           const removedPawn = this.parentElement.removeChild(this);
@@ -222,6 +230,14 @@ function BoardCleanUp(
 // TODO: FIX IT SO WE HAVE A NICE FUNCTION THAT CHECKS FOR THE PARENT
 function SwitchToLane(currIdx: number, nextIdx: number, color: possibleColors) {
   // * TODO: make it pretty maybe
+  if (color === "blue") {
+    let blueTempEnd = [36, 37, 38, 39, 0, 1];
+    if (nextIdx > 1 && blueTempEnd.includes(currIdx)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   if (
     nextIdx > parseInt(colorEnd[color]) &&
     currIdx < parseInt(colorEnd[color])
@@ -261,13 +277,19 @@ function CheckAndKillEnemyPawns(idx: number, color: possibleColors) {
   if (playableSquares[idx].firstElementChild) {
     const nextIdxSquare = playableSquares[idx];
     const enemyPawn = nextIdxSquare.firstElementChild;
-    if (enemyPawn instanceof HTMLElement && enemyPawn.dataset?.pawn === color) {
-      console.log("enemy");
-      const enemyPawnColor = enemyPawn.dataset.pawn;
-      Array.from(nextIdxSquare.children).forEach((child) => {
-        child.removeEventListener("click", PawnHandler(enemyPawnColor));
-      });
-      colorPawnsSpawn[enemyPawnColor].append(...nextIdxSquare.children);
+    console.log(enemyPawn);
+    if (enemyPawn instanceof HTMLElement && enemyPawn) {
+      if (
+        enemyPawn.dataset.pawn !== undefined &&
+        enemyPawn.dataset.pawn !== color
+      ) {
+        console.log("enemy");
+        const enemyPawnColor = enemyPawn.dataset.pawn as possibleColors;
+        Array.from(nextIdxSquare.children).forEach((child) => {
+          child.removeEventListener("click", PawnHandler(enemyPawnColor));
+        });
+        colorPawnsSpawn[enemyPawnColor].append(...nextIdxSquare.children);
+      }
     } else {
       console.log("its our pawn, do nofin");
     }
@@ -281,16 +303,35 @@ dice.addEventListener("click", DiceClick);
 function DiceClick(this: HTMLButtonElement, e: Event) {
   if (diceReady) {
     diceThrow = Math.floor(Math.random() * 6) + 1; //! PLACE FOR THE CHANGE OF DICE THROW
-
+    console.log(dice.getAttribute("--color-show"));
+    console.log(dice);
+    console.log(this.hasAttribute("background-color"));
+    this.style.setProperty("--color-show", playerColor);
     AppendBoardHistory(playerColor, diceThrow);
     TurnOnDice(diceThrow);
     TogglePawnAndDice();
+    if (
+      diceThrow !== 6 &&
+      colorPawnsSpawn[playerColor].childElementCount +
+        colorFinishedPawns[playerColor].childElementCount ===
+        4
+    ) {
+      gameInfo.classList.remove("game-info-out");
+      gameInfo.classList.add("game-info-in");
+      placePawn.addEventListener("click", PassYourTurn);
+    }
   } else {
     console.log("YOU ARE NOT SUPPOSED TO THROW THE DICE YET");
   }
   this.focus();
 }
-
+function PassYourTurn(this: Element) {
+  this.removeEventListener("click", PassYourTurn);
+  gameInfo.classList.add("game-info-out");
+  gameInfo.classList.remove("game-info-in");
+  TogglePawnAndDice();
+  playerColor = colorOrder[playerColor];
+}
 function RemoveChildFromAnElement(parent: Element) {
   return parent.removeChild(parent.lastElementChild as Element);
 }
@@ -308,6 +349,7 @@ function KillAllPawns() {
     });
     spawnForColor.append(...pawnOfColor);
   }
+  CloseModal();
   ClearBoardHistory();
   playerColor = initColor;
   diceThrow = initDiceThrow;
