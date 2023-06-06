@@ -62,7 +62,18 @@ const boardHistory = document.querySelector<HTMLElement>(
 export function AppendBoardHistory(color: possibleColors, diceThrow: number) {
   moveCount++;
   const tableRow = document.createElement("tr");
-  tableRow.innerHTML = `<td>${moveCount}</td><td style="--player-color:${color}">${color}</td><td>${diceThrow}</td>`;
+  const tableItem1 = document.createElement("td");
+  const tableItem2 = document.createElement("td");
+  const tableItem3 = document.createElement("td");
+
+  tableItem1.innerText = moveCount.toString();
+  tableItem2.style.setProperty("--player-color", color);
+  tableItem2.innerText = color;
+  tableItem3.innerText = diceThrow.toString();
+
+  tableRow.append(tableItem1, tableItem2, tableItem3);
+
+  // tableRow.innerHTML = `<td>${moveCount}</td><td style="--player-color:${color}">${color}</td><td>${diceThrow}</td>`;
   if (!boardHistory.children.length) {
     boardHistory.appendChild(tableRow);
   } else {

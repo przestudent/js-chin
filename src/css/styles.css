@@ -351,11 +351,10 @@ div.square.red {
 
 .board-history {
   background-color: var(--background-default);
-  overflow: scroll;
+  overflow-y: scroll;
   height: 25rem;
   width: calc(var(--spawn-size) *1.7);
   border: 2px solid var(--border-color);
-  /* z-index: 9999; */
 }
 
 .board-history-table thead {
@@ -382,7 +381,16 @@ table {
 }
 
 table>tbody>tr>td:nth-child(2) {
+  text-align: center;
   color: var(--player-color)
+}
+
+table>tbody>tr>td:last-child {
+  text-align: right;
+}
+
+table>tbody>tr>td:first-child {
+  font-weight: bold;
 }
 
 /* #endregion */

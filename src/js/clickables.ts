@@ -22,7 +22,7 @@ const colorOrder: {
 };
 const initDiceThrow = 6;
 let diceThrow = initDiceThrow;
-const initColor = "red";
+const initColor = "blue";
 let playerColor: possibleColors = initColor;
 
 // #region
@@ -34,19 +34,10 @@ const playableSquares = Array.from(
     parseInt(a.dataset.index as string) - parseInt(b.dataset.index as string)
   );
 });
-// const boardPlayArray = new Array<SquareInsides>(40);
-// for (let i = 0; i < playableSquares.length; i++) {
-//   boardPlayArray[i] = new SquareInsides();
-// }
-const colorWin = document.querySelector(".black") as Element;
+
 const playerColorShow = document.querySelector(".player") as Element;
 const colorWinLane = ColorWinLane();
-const colorLaneArray: { [color in possibleColors]: possibleColors[] } = {
-  red: new Array(4).fill(""),
-  green: new Array(4).fill(""),
-  yellow: new Array(4).fill(""),
-  blue: new Array(4).fill(""),
-};
+
 const colorEnd: { [color in possibleColors]: string } = {
   red: (document.querySelector<HTMLElement>("[data-end=red]") as HTMLElement)
     .dataset.index as string,
@@ -180,8 +171,6 @@ function PawnHandler(color_: possibleColors) {
       // * we are on the board
       BoardCleanUp(idx, nextIdx, color_, this);
       TogglePawnAndDice();
-      //console.log(playableSquares);
-      //console.log(boardPlayArray);
     }
   };
   // ! TODO: ADD HISTORY APPEND
@@ -194,30 +183,20 @@ function BoardCleanUp(
   winLane = false
 ) {
   if (winLane) {
-    //boardPlayArray[currIdx].removePawn(0);
-    const steps = currIdx - parseInt(colorEnd[color]) + diceThrow;
+    const parentSquare = pawnElement.parentElement as Element;
+    const steps =
+      (currIdx - parseInt(colorEnd[color]) + diceThrow - 1) %
+      playableSquares.length;
     if (steps > 4) {
-      if (pawnElement.parentElement) {
-        colorWin.appendChild(
-          RemoveChildFromAnElement(pawnElement.parentElement)
-        );
-      } else {
-        console.log("SOMETHING HAS GONE HORRIBLY WRONG");
-      }
-    }
-
-    if (pawnElement.parentElement) {
-      colorWinLane[color][steps].appendChild(
-        RemoveChildFromAnElement(pawnElement.parentElement)
+      colorFinishedPawns[color].appendChild(
+        RemoveChildFromAnElement(parentSquare)
       );
     } else {
-      console.log("SOMETHING HAS GONE HORRIBLY WRONG_2");
+      colorWinLane[color][steps].appendChild(
+        RemoveChildFromAnElement(parentSquare)
+      );
     }
-    return;
   }
-  //boardPlayArray[currIdx].removePawn(0);
-  //boardPlayArray[nextIdx].addPawn(color);
-
   // ! we need to kill pawns
   if (pawnElement.parentElement) {
     const movedPawn = RemoveChildFromAnElement(pawnElement.parentElement);
@@ -302,10 +281,9 @@ function CheckAndKillEnemyPawns(idx: number, color: possibleColors) {
 dice.addEventListener("click", DiceClick);
 function DiceClick(this: HTMLButtonElement, e: Event) {
   if (diceReady) {
-    diceThrow = Math.floor(Math.random() * 6) + 1; //! PLACE FOR THE CHANGE OF DICE THROW
-    console.log(dice.getAttribute("--color-show"));
-    console.log(dice);
-    console.log(this.hasAttribute("background-color"));
+    //diceThrow = Math.floor(Math.random() * 6) + 1; //! PLACE FOR THE CHANGE OF DICE THROW
+    // diceThrow = Math.floor(Math.random() * 6) + 1;
+    diceThrow = 6;
     this.style.setProperty("--color-show", playerColor);
     AppendBoardHistory(playerColor, diceThrow);
     TurnOnDice(diceThrow);
@@ -318,6 +296,7 @@ function DiceClick(this: HTMLButtonElement, e: Event) {
     ) {
       gameInfo.classList.remove("game-info-out");
       gameInfo.classList.add("game-info-in");
+      placePawn.focus();
       placePawn.addEventListener("click", PassYourTurn);
     }
   } else {
@@ -330,11 +309,14 @@ function PassYourTurn(this: Element) {
   gameInfo.classList.add("game-info-out");
   gameInfo.classList.remove("game-info-in");
   TogglePawnAndDice();
-  playerColor = colorOrder[playerColor];
+  dice.focus();
+  //playerColor = colorOrder[playerColor];
 }
 function RemoveChildFromAnElement(parent: Element) {
   return parent.removeChild(parent.lastElementChild as Element);
 }
+
+document.addEventListener("keydown", (e) => console.log(e.target));
 
 function KillAllPawns() {
   for (const color of colors) {
