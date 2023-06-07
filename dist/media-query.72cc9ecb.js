@@ -120,26 +120,26 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 })({"src/js/media-query.ts":[function(require,module,exports) {
 "use strict";
 
-var mediaQueryListener = window.matchMedia("(max-width:970px)");
-var columnRight = document.querySelector(".column-right");
-var columnLeft = document.querySelector(".column-left");
-var historyScroll = document.querySelector(".board-history-wrapper");
-var gameWrapper = document.querySelector("#game-wrapper");
-var pawnsGreen = document.querySelector(".container-green");
-var pawnsYellow = document.querySelector(".container-yellow");
-var gameInfo = document.querySelector(".game-info");
-var body = document.querySelector("body");
-var winScreen = document.querySelector(".win-screen");
+var mediaQueryListener = window.matchMedia('(max-width:970px)');
+var columnRight = document.querySelector('.column-right');
+var columnLeft = document.querySelector('.column-left');
+var historyScroll = document.querySelector('.board-history-wrapper');
+var gameWrapper = document.querySelector('#game-wrapper');
+var pawnsGreen = document.querySelector('.container-green');
+var pawnsYellow = document.querySelector('.container-yellow');
+var gameInfo = document.querySelector('#game-info');
+var body = document.querySelector('body');
+var winScreen = document.querySelector('.win-screen');
 var isMobile = false;
-mediaQueryListener.addEventListener("change", function (e) {
-  console.log("yes");
+mediaQueryListener.addEventListener('change', function (e) {
+  console.log('yes');
   if (e.matches) {
     ScreenChangeToMobile();
   } else {
     if (isMobile) {
       isMobile = false;
-      historyScroll.classList.remove("wide-history");
-      gameInfo.classList.remove("game-info-top-left");
+      historyScroll.classList.remove('wide-history');
+      gameInfo.classList.remove('game-info-top-left');
       var removedHistoryWrapper = gameWrapper.removeChild(historyScroll);
       var removedGameInfo = body.removeChild(gameInfo);
       columnLeft.insertBefore(removedGameInfo, pawnsYellow);
@@ -151,11 +151,12 @@ if (mediaQueryListener.matches) {
   ScreenChangeToMobile();
 }
 function ScreenChangeToMobile() {
+  console.log(gameInfo);
   isMobile = true;
   var removedGameInfo = columnLeft.removeChild(gameInfo);
   var removedHistoryWrapper = columnRight.removeChild(historyScroll);
-  removedHistoryWrapper.classList.add("wide-history");
-  removedGameInfo.classList.add("game-info-top-left");
+  removedHistoryWrapper.classList.add('wide-history');
+  removedGameInfo.classList.add('game-info-top-left');
   body.insertBefore(removedGameInfo, winScreen);
   gameWrapper.appendChild(removedHistoryWrapper);
 }
@@ -184,7 +185,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50125" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49160" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

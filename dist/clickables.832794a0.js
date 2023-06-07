@@ -205,59 +205,59 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 var initialiser_1 = require("./initialiser");
-var colors = ["red", "blue", "green", "yellow"];
+var colors = ['red', 'blue', 'green', 'yellow'];
 var roadToWin = 39;
 var colorOrder = {
-  red: "blue",
-  blue: "green",
-  green: "yellow",
-  yellow: "red"
+  red: 'blue',
+  blue: 'green',
+  green: 'yellow',
+  yellow: 'red'
 };
 var initDiceThrow = 6;
 var diceThrow = initDiceThrow;
-var initColor = "blue";
+var initColor = 'blue';
 var playerColor = initColor;
 // #region
-var playableSquares = Array.from(document.querySelectorAll(".square[data-index]")).sort(function (a, b) {
+var playableSquares = Array.from(document.querySelectorAll('.square[data-index]')).sort(function (a, b) {
   return parseInt(a.dataset.index) - parseInt(b.dataset.index);
 });
-var playerColorShow = document.querySelector(".player");
+var playerColorShow = document.querySelector('.player');
 var colorWinLane = (0, initialiser_1.ColorWinLane)();
 var colorEnd = {
-  red: document.querySelector("[data-end=red]").dataset.index,
-  blue: document.querySelector("[data-end=blue]").dataset.index,
-  yellow: document.querySelector("[data-end=yellow]").dataset.index,
-  green: document.querySelector("[data-end=green]").dataset.index
+  red: document.querySelector('[data-end=red]').dataset.index,
+  blue: document.querySelector('[data-end=blue]').dataset.index,
+  yellow: document.querySelector('[data-end=yellow]').dataset.index,
+  green: document.querySelector('[data-end=green]').dataset.index
 };
 var colorStart = {
-  red: document.querySelector(".red-light").dataset.index,
-  blue: document.querySelector(".blue-light").dataset.index,
-  yellow: document.querySelector(".yellow-light").dataset.index,
-  green: document.querySelector(".green-light").dataset.index
+  red: document.querySelector('.red-light').dataset.index,
+  blue: document.querySelector('.blue-light').dataset.index,
+  yellow: document.querySelector('.yellow-light').dataset.index,
+  green: document.querySelector('.green-light').dataset.index
 };
 var colorPawnsSpawn = {
-  red: document.querySelector("#pawns-red"),
-  blue: document.querySelector("#pawns-blue"),
-  yellow: document.querySelector("#pawns-yellow"),
-  green: document.querySelector("#pawns-green")
+  red: document.querySelector('#pawns-red'),
+  blue: document.querySelector('#pawns-blue'),
+  yellow: document.querySelector('#pawns-yellow'),
+  green: document.querySelector('#pawns-green')
 };
 var colorFinishedPawns = {
-  red: document.querySelector(".finished-pawns-red"),
-  green: document.querySelector(".finished-pawns-green"),
-  blue: document.querySelector(".finished-pawns-blue"),
-  yellow: document.querySelector(".finished-pawns-yellow")
+  red: document.querySelector('.finished-pawns-red'),
+  green: document.querySelector('.finished-pawns-green'),
+  blue: document.querySelector('.finished-pawns-blue'),
+  yellow: document.querySelector('.finished-pawns-yellow')
 };
-var placePawn = document.querySelector(".place-pawn");
-var placeSkip = document.querySelector(".place-skip");
-var gameInfo = document.querySelector("#game-info");
-document.querySelector(".close-modal").addEventListener("click", CloseModal);
+var placePawn = document.querySelector('.place-pawn');
+var placeSkip = document.querySelector('.place-skip');
+var gameInfo = document.querySelector('#game-info');
+document.querySelector('.close-modal').addEventListener('click', CloseModal);
 function CloseModal() {
-  document.querySelector(".win-screen").classList.add("display-none");
+  document.querySelector('.win-screen').classList.add('display-none');
 }
-var buttonRestart = document.querySelector(".button-restart");
-buttonRestart.addEventListener("click", KillAllPawns);
-var dice = document.querySelector(".dice");
-var diceText = document.querySelector(".dice-before-text");
+var buttonRestart = document.querySelector('.button-restart');
+buttonRestart.addEventListener('click', KillAllPawns);
+var dice = document.querySelector('.dice');
+var diceText = document.querySelector('.dice-before-text');
 var diceReady = true;
 var pickPawn = false;
 var colorPawn = {
@@ -271,9 +271,9 @@ function TogglePawnAndDice() {
   diceReady = !diceReady;
   pickPawn = !pickPawn;
   if (diceReady) {
-    diceText.innerText = "Ready";
+    diceText.innerText = 'Ready';
   } else {
-    diceText.innerText = "Not Ready";
+    diceText.innerText = 'Not Ready';
   }
   if (diceReady) {
     dice.focus();
@@ -285,9 +285,9 @@ function NextIdx(currIdx) {
 function CheckAndHandleWin(color) {
   var _a, _b;
   if (((_a = colorFinishedPawns[color]) === null || _a === void 0 ? void 0 : _a.childElementCount) === 1) {
-    console.log("WIN");
-    dice.removeEventListener("click", DiceClick);
-    (_b = document.querySelector(".win-screen")) === null || _b === void 0 ? void 0 : _b.classList.remove("display-none");
+    console.log('WIN');
+    dice.removeEventListener('click', DiceClick);
+    (_b = document.querySelector('.win-screen')) === null || _b === void 0 ? void 0 : _b.classList.remove('display-none');
     buttonRestart.focus();
     diceReady = false;
     pickPawn = false;
@@ -305,7 +305,7 @@ function PawnHandler(color_) {
         if (this.parentElement) {
           var removedPawn = this.parentElement.removeChild(this);
           if (parseInt(dataSetIndex) + diceThrow > 3) {
-            this.removeEventListener("click", HOHandler);
+            this.removeEventListener('click', HOHandler);
             (_a = colorFinishedPawns[color_]) === null || _a === void 0 ? void 0 : _a.appendChild(removedPawn);
             CheckAndHandleWin(color_);
           } else {
@@ -319,7 +319,6 @@ function PawnHandler(color_) {
       var idx = parseInt(this.parentElement.dataset.index);
       var nextIdx = NextIdx(idx);
       if (SwitchToLane(idx, nextIdx, color_)) {
-        console.log("lane");
         BoardCleanUp(idx, idx, color_, this, true);
         TogglePawnAndDice();
         return;
@@ -340,13 +339,20 @@ function BoardCleanUp(currIdx, nextIdx, color, pawnElement, winLane) {
     winLane = false;
   }
   if (winLane) {
+    console.log('yup we are on boardcleanup for tha pawn');
     var parentSquare = pawnElement.parentElement;
     var steps = (currIdx - parseInt(colorEnd[color]) + diceThrow - 1) % playableSquares.length;
     if (steps > 4) {
+      console.log('we gp straigth to finished');
       colorFinishedPawns[color].appendChild(RemoveChildFromAnElement(parentSquare));
     } else {
+      console.log('win lane now');
+      console.log(steps);
+      console.log(colorWinLane[color]);
+      console.log(colorWinLane[color][steps]);
       colorWinLane[color][steps].appendChild(RemoveChildFromAnElement(parentSquare));
     }
+    return;
   }
   // ! we need to kill pawns
   if (pawnElement.parentElement) {
@@ -354,15 +360,16 @@ function BoardCleanUp(currIdx, nextIdx, color, pawnElement, winLane) {
     playableSquares[nextIdx].appendChild(movedPawn);
     CheckAndKillEnemyPawns(nextIdx, color);
   } else {
-    console.log("no parent");
+    console.log('no parent');
   }
 }
 // TODO: FIX IT SO WE HAVE A NICE FUNCTION THAT CHECKS FOR THE PARENT
 function SwitchToLane(currIdx, nextIdx, color) {
   // * TODO: make it pretty maybe
-  if (color === "blue") {
+  if (color === 'blue') {
     var blueTempEnd = [36, 37, 38, 39, 0, 1];
     if (nextIdx > 1 && blueTempEnd.includes(currIdx)) {
+      console.log('TEPTPEPTEPTPEP WE SHOULD SWITCH NOW~~');
       return true;
     } else {
       return false;
@@ -379,19 +386,19 @@ function SpawnCallback(colorSpawn, color) {
     if (pickPawn && diceThrow === 6 && colorSpawn.childElementCount > 0 && playerColor == color) {
       var removedPawnFromSpawn = colorSpawn.removeChild(colorSpawn.lastElementChild);
       var startIndex = parseInt(colorStart[playerColor]);
-      removedPawnFromSpawn.addEventListener("click", PawnHandler(color));
+      removedPawnFromSpawn.addEventListener('click', PawnHandler(color));
       playableSquares[startIndex].appendChild(removedPawnFromSpawn);
       CheckAndKillEnemyPawns(startIndex, color);
       TogglePawnAndDice();
     } else {
-      console.log("you gavbe to throw 6 to move");
+      console.log('you gavbe to throw 6 to move');
     }
   };
 }
 for (var _i = 0, colors_1 = colors; _i < colors_1.length; _i++) {
   var color = colors_1[_i];
   var colorSpawn = colorPawnsSpawn[color];
-  colorSpawn.addEventListener("click", SpawnCallback(colorSpawn, color));
+  colorSpawn.addEventListener('click', SpawnCallback(colorSpawn, color));
 }
 function CheckAndKillEnemyPawns(idx, color) {
   var _a;
@@ -401,46 +408,46 @@ function CheckAndKillEnemyPawns(idx, color) {
     console.log(enemyPawn);
     if (enemyPawn instanceof HTMLElement && enemyPawn) {
       if (enemyPawn.dataset.pawn !== undefined && enemyPawn.dataset.pawn !== color) {
-        console.log("enemy");
+        console.log('enemy');
         var enemyPawnColor_1 = enemyPawn.dataset.pawn;
         Array.from(nextIdxSquare.children).forEach(function (child) {
-          child.removeEventListener("click", PawnHandler(enemyPawnColor_1));
+          child.removeEventListener('click', PawnHandler(enemyPawnColor_1));
         });
         (_a = colorPawnsSpawn[enemyPawnColor_1]).append.apply(_a, nextIdxSquare.children);
       }
     } else {
-      console.log("its our pawn, do nofin");
+      console.log('its our pawn, do nofin');
     }
   } else {
-    console.log("no children, we can proceed");
+    console.log('no children, we can proceed');
   }
 }
 // ! TODO FIX IT SO YOU CANT CLICK THE DICE
-dice.addEventListener("click", DiceClick);
+dice.addEventListener('click', DiceClick);
 function DiceClick(e) {
   if (diceReady) {
     //diceThrow = Math.floor(Math.random() * 6) + 1; //! PLACE FOR THE CHANGE OF DICE THROW
     // diceThrow = Math.floor(Math.random() * 6) + 1;
     diceThrow = 6;
-    this.style.setProperty("--color-show", playerColor);
+    this.style.setProperty('--color-show', playerColor);
     (0, initialiser_1.AppendBoardHistory)(playerColor, diceThrow);
     (0, initialiser_1.TurnOnDice)(diceThrow);
     TogglePawnAndDice();
     if (diceThrow !== 6 && colorPawnsSpawn[playerColor].childElementCount + colorFinishedPawns[playerColor].childElementCount === 4) {
-      gameInfo.classList.remove("game-info-out");
-      gameInfo.classList.add("game-info-in");
+      gameInfo.classList.remove('game-info-out');
+      gameInfo.classList.add('game-info-in');
       placePawn.focus();
-      placePawn.addEventListener("click", PassYourTurn);
+      placePawn.addEventListener('click', PassYourTurn);
     }
   } else {
-    console.log("YOU ARE NOT SUPPOSED TO THROW THE DICE YET");
+    console.log('YOU ARE NOT SUPPOSED TO THROW THE DICE YET');
   }
   this.focus();
 }
 function PassYourTurn() {
-  this.removeEventListener("click", PassYourTurn);
-  gameInfo.classList.add("game-info-out");
-  gameInfo.classList.remove("game-info-in");
+  this.removeEventListener('click', PassYourTurn);
+  gameInfo.classList.add('game-info-out');
+  gameInfo.classList.remove('game-info-in');
   TogglePawnAndDice();
   dice.focus();
   //playerColor = colorOrder[playerColor];
@@ -449,7 +456,7 @@ function PassYourTurn() {
 function RemoveChildFromAnElement(parent) {
   return parent.removeChild(parent.lastElementChild);
 }
-document.addEventListener("keydown", function (e) {
+document.addEventListener('keydown', function (e) {
   return console.log(e.target);
 });
 function KillAllPawns() {
@@ -459,7 +466,7 @@ function KillAllPawns() {
     pawnOfColor.forEach(function (e) {
       var _a;
       (_a = e.parentElement) === null || _a === void 0 ? void 0 : _a.removeChild(e);
-      e.removeEventListener("click", PawnHandler(color));
+      e.removeEventListener('click', PawnHandler(color));
       console.log(e);
     });
     spawnForColor.append.apply(spawnForColor, pawnOfColor);
@@ -474,8 +481,8 @@ function KillAllPawns() {
   diceThrow = initDiceThrow;
   diceReady = true;
   pickPawn = false;
-  diceText.innerText = "Ready";
-  dice.addEventListener("click", DiceClick);
+  diceText.innerText = 'Ready';
+  dice.addEventListener('click', DiceClick);
 }
 },{"./initialiser":"src/js/initialiser.ts"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -502,7 +509,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50125" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49160" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

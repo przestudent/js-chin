@@ -107,7 +107,7 @@ dialog[open]::backdrop {
   width: 100px;
   height: 100px;
   display: grid;
-  transform: translateX(-200%);
+  transform: translateX(-20vw);
 }
 
 .game-info-in {
@@ -125,14 +125,14 @@ dialog[open]::backdrop {
   }
 
   100% {
-    transform: translateX(-200%);
+    transform: translateX(-20vw);
     opacity: 0;
   }
 }
 
 @keyframes slide-in-left-pass {
   0% {
-    transform: translateX(-200%);
+    transform: translateX(-20vw);
     opacity: 0;
   }
 
