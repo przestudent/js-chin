@@ -5,6 +5,8 @@ import {
   TurnOnDice,
   ClearBoardHistory,
 } from './initialiser';
+
+document.querySelector<HTMLDialogElement>('#tutorial')?.showModal();
 const colors: possibleColors[] = ['red', 'blue', 'green', 'yellow'];
 
 const roadToWin = 39;
@@ -288,9 +290,9 @@ function CheckAndKillEnemyPawns(idx: number, color: possibleColors) {
 dice.addEventListener('click', DiceClick);
 function DiceClick(this: HTMLButtonElement, e: Event) {
   if (diceReady) {
-    //diceThrow = Math.floor(Math.random() * 6) + 1; //! PLACE FOR THE CHANGE OF DICE THROW
+    diceThrow = Math.floor(Math.random() * 6) + 1; //! PLACE FOR THE CHANGE OF DICE THROW
     // diceThrow = Math.floor(Math.random() * 6) + 1;
-    diceThrow = 6;
+    // diceThrow = 6;
     this.style.setProperty('--color-show', playerColor);
     AppendBoardHistory(playerColor, diceThrow);
     TurnOnDice(diceThrow);

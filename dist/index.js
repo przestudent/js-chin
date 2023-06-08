@@ -117,50 +117,58 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/js/media-query.ts":[function(require,module,exports) {
-"use strict";
-
-var mediaQueryListener = window.matchMedia('(max-width:970px)');
-var columnRight = document.querySelector('.column-right');
-var columnLeft = document.querySelector('.column-left');
-var historyScroll = document.querySelector('.board-history-wrapper');
-var gameWrapper = document.querySelector('#game-wrapper');
-var pawnsGreen = document.querySelector('.container-green');
-var pawnsYellow = document.querySelector('.container-yellow');
-var gameInfo = document.querySelector('#game-info');
-var body = document.querySelector('body');
-var winScreen = document.querySelector('.win-screen');
-var isMobile = false;
-mediaQueryListener.addEventListener('change', function (e) {
-  console.log('yes');
-  if (e.matches) {
-    ScreenChangeToMobile();
-  } else {
-    if (isMobile) {
-      isMobile = false;
-      historyScroll.classList.remove('wide-history');
-      gameInfo.classList.remove('game-info-top-left');
-      var removedHistoryWrapper = gameWrapper.removeChild(historyScroll);
-      var removedGameInfo = body.removeChild(gameInfo);
-      columnLeft.insertBefore(removedGameInfo, pawnsYellow);
-      columnRight.insertBefore(removedHistoryWrapper, pawnsGreen);
+})({"node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+var bundleURL = null;
+function getBundleURLCached() {
+  if (!bundleURL) {
+    bundleURL = getBundleURL();
+  }
+  return bundleURL;
+}
+function getBundleURL() {
+  // Attempt to find the URL of the current script and use that as the base URL
+  try {
+    throw new Error();
+  } catch (err) {
+    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
+    if (matches) {
+      return getBaseURL(matches[0]);
     }
   }
-});
-if (mediaQueryListener.matches) {
-  ScreenChangeToMobile();
+  return '/';
 }
-function ScreenChangeToMobile() {
-  console.log(gameInfo);
-  isMobile = true;
-  var removedGameInfo = columnLeft.removeChild(gameInfo);
-  var removedHistoryWrapper = columnRight.removeChild(historyScroll);
-  removedHistoryWrapper.classList.add('wide-history');
-  removedGameInfo.classList.add('game-info-top-left');
-  body.insertBefore(removedGameInfo, winScreen);
-  gameWrapper.appendChild(removedHistoryWrapper);
+function getBaseURL(url) {
+  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)?\/[^/]+(?:\?.*)?$/, '$1') + '/';
 }
-},{}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+},{}],"node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+var bundle = require('./bundle-url');
+function updateLink(link) {
+  var newLink = link.cloneNode();
+  newLink.onload = function () {
+    link.remove();
+  };
+  newLink.href = link.href.split('?')[0] + '?' + Date.now();
+  link.parentNode.insertBefore(newLink, link.nextSibling);
+}
+var cssTimeout = null;
+function reloadCSS() {
+  if (cssTimeout) {
+    return;
+  }
+  cssTimeout = setTimeout(function () {
+    var links = document.querySelectorAll('link[rel="stylesheet"]');
+    for (var i = 0; i < links.length; i++) {
+      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
+        updateLink(links[i]);
+      }
+    }
+    cssTimeout = null;
+  }, 50);
+}
+module.exports = reloadCSS;
+},{"./bundle-url":"node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -329,5 +337,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","src/js/media-query.ts"], null)
-//# sourceMappingURL=/media-query.72cc9ecb.js.map
+},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
+//# sourceMappingURL=/index.js.map

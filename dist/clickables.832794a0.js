@@ -201,10 +201,12 @@ exports.ClearBoardHistory = ClearBoardHistory;
 },{}],"src/js/clickables.ts":[function(require,module,exports) {
 "use strict";
 
+var _a;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 var initialiser_1 = require("./initialiser");
+(_a = document.querySelector('#tutorial')) === null || _a === void 0 ? void 0 : _a.showModal();
 var colors = ['red', 'blue', 'green', 'yellow'];
 var roadToWin = 39;
 var colorOrder = {
@@ -426,9 +428,9 @@ function CheckAndKillEnemyPawns(idx, color) {
 dice.addEventListener('click', DiceClick);
 function DiceClick(e) {
   if (diceReady) {
-    //diceThrow = Math.floor(Math.random() * 6) + 1; //! PLACE FOR THE CHANGE OF DICE THROW
+    diceThrow = Math.floor(Math.random() * 6) + 1; //! PLACE FOR THE CHANGE OF DICE THROW
     // diceThrow = Math.floor(Math.random() * 6) + 1;
-    diceThrow = 6;
+    // diceThrow = 6;
     this.style.setProperty('--color-show', playerColor);
     (0, initialiser_1.AppendBoardHistory)(playerColor, diceThrow);
     (0, initialiser_1.TurnOnDice)(diceThrow);
@@ -509,7 +511,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49160" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51525" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

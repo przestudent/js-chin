@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200&family=Oxygen:wght@300&display=swap" rel="stylesheet">
+
     <script src="https://kit.fontawesome.com/2f4e2dac07.js" crossorigin="anonymous"></script>
   <script src="/styles.237c716e.js"></script></head>
 
@@ -187,13 +188,34 @@
         </div>
       </dialog>
     </div> -->
-    <dialog id="win-modal" class="modal">
-      <h1>You Win!</h1>
+    <!-- <dialog id="win-modal" class="modal"> -->
+    <dialog id="win-modal">
+      <h2>You Win!</h2>
       <div class="win-buttons">
         <button class="close-modal">Close</button>
         <button class="button-restart">Restart</button>
       </div>
     </dialog>
+    <!-- <dialog id="tutorial" class="modal"> -->
+    <dialog id="tutorial">
+      <h1>
+        Welcome to
+        <span style="display: block"> 🎲Chinczyk<strong>JS</strong>🎲!</span>
+      </h1>
+      <h2>First one to <strong>4</strong> finished pawns wins!</h2>
+      <h3>
+        By throwing <strong>6</strong> you are able to place another pawn! And
+        throw again!
+      </h3>
+      <p>
+        Upon throwing the dice <strong>click</strong> the pawn you want to move!
+        Of course you can only move pawns of your own color ;)
+      </p>
+      <form id="tutorial-close" method="dialog">
+        <button formmethod="dialog">✖</button>
+      </form>
+    </dialog>
+
     <!-- <script src="src/js/index.js"></script> -->
     <script src="/clickables.832794a0.js"></script>
     <script src="/media-query.72cc9ecb.js"></script>

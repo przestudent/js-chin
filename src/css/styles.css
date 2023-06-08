@@ -15,6 +15,7 @@
 
   --background-default: white;
   --border-color: black;
+  color: var(--border-color);
 }
 
 body {
@@ -24,6 +25,7 @@ body {
   background-color: var(--border-color);
 }
 
+/* #region dialogs*/
 dialog#win-modal[open] {
   display: flex;
   flex-direction: column;
@@ -34,14 +36,49 @@ dialog#win-modal[open] {
   border-radius: 6px;
 }
 
-.modal {
-  position: fixed;
+dialog {
+
   animation: win-modal-slide-in 1s ease 0.2s both;
-  z-index: 9999;
 }
 
-dialog[open]::backdrop {
+/* .modal {
+  position: fixed;
+  top: 50%;
+  z-index: 9999;
+  border: none;
+} */
+
+dialog#win-modal[open]::backdrop {
   animation: backdrop-opacity 1s ease 0.2s both;
+}
+
+dialog#tutorial[open] {
+  display: flex;
+  flex-direction: column;
+  background: black;
+  color: white;
+  border: 2px solid white;
+  height: 30rem;
+  width: 20rem;
+  justify-content: space-between;
+}
+
+#tutorial-close {
+  position: absolute;
+  top: 3%;
+  right: 5%;
+}
+
+dialog#tutorial[open] {
+  text-align: center;
+}
+
+dialog#tutorial strong {
+  color: gold
+}
+
+dialog#tutorial[open]::backdrop {
+  background-color: rgb(0, 0, 0, 0.25);
 }
 
 @keyframes backdrop-opacity {
@@ -69,9 +106,7 @@ dialog[open]::backdrop {
 
 }
 
-
-
-#win-modal h1 {
+#win-modal h2 {
   text-align: center;
   color: var(--background-default);
 }
@@ -90,7 +125,7 @@ dialog[open]::backdrop {
   transition: transform ease 0.5s;
 }
 
-
+/* #endregion */
 /* ! TODO: FIX IT SO ITS NICE */
 /* .win-buttons button:target {
   border-color: aqua;
@@ -157,7 +192,7 @@ dialog[open]::backdrop {
 #game-wrapper {
   width: 100%;
   position: absolute;
-  background-color: white;
+  background-color: var(--background-default);
   display: grid;
   justify-items: center;
   grid-template-columns: 1fr 1fr 1fr;
@@ -223,6 +258,13 @@ dialog[open]::backdrop {
 .pawn {
   width: var(--pawn-width);
   height: var(--pawn-height);
+  transition: scale ease 0.2s;
+  border: 1px solid var(--border-color);
+  border-radius: 100%;
+}
+
+.pawn:hover {
+  scale: 1.2;
 }
 
 .win-lane {
@@ -255,7 +297,7 @@ dialog[open]::backdrop {
 
 .square {
   background-color: var(--background-default);
-  border: 2px solid var(--border-color);
+  border: 1px solid var(--border-color);
   width: var(--square-size);
   height: var(--square-size);
   display: grid;
@@ -274,43 +316,39 @@ dialog[open]::backdrop {
 }
 
 .green {
-  background-color: green;
+  background-color: hsla(120, 100%, 25%, 1);
 }
 
 .red {
-  background-color: red;
+  background-color: hsla(360, 100%, 50%, 1);
 }
 
 .blue {
-  background-color: blue;
+  background-color: hsla(240, 100%, 50%, 1);
 }
 
 .yellow {
-  background-color: yellow;
+  background-color: hsla(60, 100%, 50%, 1);
 }
 
 .black {
-  background-color: var(--border-color);
+  background-color: black;
 }
 
 .green-light {
-  background-color: lightgreen;
+  background-color: hsla(120, 100%, 25%, 1);
 }
 
 .red-light {
-  background-color: pink;
+  background-color: hsla(360, 100%, 50%, 1);
 }
 
 .blue-light {
-  background-color: lightblue;
+  background-color: hsla(240, 100%, 50%, 1);
 }
 
 .yellow-light {
-  background-color: rgb(255, 255, 126);
-}
-
-div.square.red {
-  background-color: rgb(139, 29, 29);
+  background-color: hsla(60, 100%, 50%, 1);
 }
 
 /* #endregion  */
@@ -352,6 +390,7 @@ div.square.red {
 .board-history {
   background-color: var(--background-default);
   overflow-y: scroll;
+  overflow-x: hidden;
   height: 25rem;
   width: calc(var(--spawn-size) *1.7);
   border: 2px solid var(--border-color);
@@ -368,6 +407,11 @@ div.square.red {
 
 .board-history-table tbody>tr {
   border-bottom: 1px solid var(--border-color);
+  transition: scale ease 0.2s;
+}
+
+.board-history-table tbody>tr:hover {
+  scale: 1.1;
 }
 
 .wide-history {
@@ -386,10 +430,12 @@ table>tbody>tr>td:nth-child(2) {
 }
 
 table>tbody>tr>td:last-child {
+  padding-right: 1rem;
   text-align: right;
 }
 
 table>tbody>tr>td:first-child {
+  padding-left: 1rem;
   font-weight: bold;
 }
 
@@ -485,5 +531,12 @@ table>tbody>tr>td:first-child {
 
   .board-history {
     width: 100%;
+  }
+}
+
+@media (prefers-color-scheme:light) {
+  :root {
+    --background-default: black;
+    --border-color: white;
   }
 }
