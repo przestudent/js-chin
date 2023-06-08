@@ -129,7 +129,6 @@ var pawnsGreen = document.querySelector('.container-green');
 var pawnsYellow = document.querySelector('.container-yellow');
 var gameInfo = document.querySelector('#game-info');
 var body = document.querySelector('body');
-var winScreen = document.querySelector('.win-screen');
 var isMobile = false;
 mediaQueryListener.addEventListener('change', function (e) {
   console.log('yes');
@@ -157,7 +156,7 @@ function ScreenChangeToMobile() {
   var removedHistoryWrapper = columnRight.removeChild(historyScroll);
   removedHistoryWrapper.classList.add('wide-history');
   removedGameInfo.classList.add('game-info-top-left');
-  body.insertBefore(removedGameInfo, winScreen);
+  body.appendChild(removedGameInfo);
   gameWrapper.appendChild(removedHistoryWrapper);
 }
 },{}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
@@ -185,7 +184,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51525" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58973" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

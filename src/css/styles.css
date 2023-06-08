@@ -5,7 +5,7 @@
 
   --gradient: radial-gradient(circle, var(--color-accent) 0%, var(--color-button-primary) 89%);
   --spawn-size: 7rem;
-  --dice-button-size: 2rem;
+  --dice-button-size: 4rem;
   --column-size: 7vw;
   --pawn-width: 1.8rem;
   --pawn-height: 1.8rem;
@@ -139,8 +139,8 @@ dialog#tutorial[open]::backdrop {
 
 #game-info {
   border: 2px solid var(--border-color);
-  width: 100px;
-  height: 100px;
+  width: 10rem;
+  height: 10rem;
   display: grid;
   transform: translateX(-20vw);
 }
@@ -184,7 +184,8 @@ dialog#tutorial[open]::backdrop {
 }
 
 #game-info button {
-  background-color: aqua;
+  background-color: var(--player-top-pass);
+  text-shadow: white 0px 0px 10px;
 }
 
 /* #endregion */
@@ -422,6 +423,11 @@ dialog#tutorial[open]::backdrop {
 table {
   border-collapse: collapse;
   width: 100%;
+}
+
+table>tbody>tr>td.thrown-six {
+  font-weight: bolder;
+  -webkit-text-stroke: 1px var(--border-color);
 }
 
 table>tbody>tr>td:nth-child(2) {

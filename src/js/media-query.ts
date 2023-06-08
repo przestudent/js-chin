@@ -9,7 +9,6 @@ const pawnsGreen = document.querySelector('.container-green') as Element;
 const pawnsYellow = document.querySelector('.container-yellow') as Element;
 const gameInfo = document.querySelector('#game-info') as Element;
 const body = document.querySelector('body') as HTMLBodyElement;
-const winScreen = document.querySelector('.win-screen') as HTMLElement;
 
 let isMobile = false;
 mediaQueryListener.addEventListener('change', (e) => {
@@ -39,6 +38,6 @@ function ScreenChangeToMobile() {
   const removedHistoryWrapper = columnRight.removeChild(historyScroll);
   removedHistoryWrapper.classList.add('wide-history');
   removedGameInfo.classList.add('game-info-top-left');
-  body.insertBefore(removedGameInfo, winScreen);
+  body.appendChild(removedGameInfo);
   gameWrapper.appendChild(removedHistoryWrapper);
 }

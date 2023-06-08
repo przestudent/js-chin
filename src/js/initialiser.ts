@@ -1,9 +1,9 @@
 export class SquareInsides {
-  public colors: possibleColors | "";
+  public colors: possibleColors | '';
   public elements: number;
   public powerUp: null;
   constructor() {
-    this.colors = "";
+    this.colors = '';
     this.elements = 0;
     this.powerUp = null;
   }
@@ -18,18 +18,18 @@ export class SquareInsides {
       this.elements--;
     }
     if (this.elements <= 0) {
-      this.colors = "";
+      this.colors = '';
     }
   }
 }
-const dices = document.querySelectorAll<HTMLElement>(".dice-throw>i");
-dices[0].style.visibility = "visible";
+const dices = document.querySelectorAll<HTMLElement>('.dice-throw>i');
+dices[0].style.visibility = 'visible';
 
 export function TurnOnDice(i: number) {
   dices.forEach((e) => {
-    e.style.visibility = "hidden";
+    e.style.visibility = 'hidden';
   });
-  dices[i - 1].style.visibility = "visible";
+  dices[i - 1].style.visibility = 'visible';
 }
 
 function WinLaneConstructor(color: possibleColors): Element[] {
@@ -38,8 +38,8 @@ function WinLaneConstructor(color: possibleColors): Element[] {
   );
   arr.sort((a, b) => {
     return (
-      parseInt(a["dataset"][`win${color}`] as string) -
-      parseInt(b["dataset"][`win${color}`] as string)
+      parseInt(a['dataset'][`win${color}`] as string) -
+      parseInt(b['dataset'][`win${color}`] as string)
     );
   });
   return arr;
@@ -47,40 +47,44 @@ function WinLaneConstructor(color: possibleColors): Element[] {
 
 export function ColorWinLane() {
   return {
-    red: WinLaneConstructor("red"),
-    blue: WinLaneConstructor("blue"),
-    green: WinLaneConstructor("green"),
-    yellow: WinLaneConstructor("yellow"),
+    red: WinLaneConstructor('red'),
+    blue: WinLaneConstructor('blue'),
+    green: WinLaneConstructor('green'),
+    yellow: WinLaneConstructor('yellow'),
   };
 }
 
 let moveCount = 0;
 
 const boardHistory = document.querySelector<HTMLElement>(
-  ".board-history-table>tbody"
+  '.board-history-table>tbody'
 ) as HTMLElement;
 export function AppendBoardHistory(color: possibleColors, diceThrow: number) {
   moveCount++;
-  const tableRow = document.createElement("tr");
-  const tableItem1 = document.createElement("td");
-  const tableItem2 = document.createElement("td");
-  const tableItem3 = document.createElement("td");
+  const tableRowFragment = document.createDocumentFragment();
+  const tableRow = document.createElement('tr');
+  const tableItem1 = document.createElement('td');
+  const tableItem2 = document.createElement('td');
+  const tableItem3 = document.createElement('td');
 
   tableItem1.innerText = moveCount.toString();
-  tableItem2.style.setProperty("--player-color", color);
+  tableItem2.style.setProperty('--player-color', color);
   tableItem2.innerText = color;
   tableItem3.innerText = diceThrow.toString();
+  if (diceThrow === 6) {
+    tableItem3.classList.add('thrown-six');
+  }
 
   tableRow.append(tableItem1, tableItem2, tableItem3);
-
-  // tableRow.innerHTML = `<td>${moveCount}</td><td style="--player-color:${color}">${color}</td><td>${diceThrow}</td>`;
+  tableRowFragment.appendChild(tableRow);
+  // tableRowFragment.innerHTML = `<td>${moveCount}</td><td style="--player-color:${color}">${color}</td><td>${diceThrow}</td>`;
   if (!boardHistory.children.length) {
-    boardHistory.appendChild(tableRow);
+    boardHistory.appendChild(tableRowFragment);
   } else {
-    boardHistory.insertBefore(tableRow, boardHistory.children[0]);
+    boardHistory.insertBefore(tableRowFragment, boardHistory.children[0]);
   }
 }
 export function ClearBoardHistory() {
-  boardHistory.innerHTML = "";
+  boardHistory.innerHTML = '';
   moveCount = 0;
 }
