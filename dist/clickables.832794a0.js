@@ -222,7 +222,7 @@ var colorOrder = {
 };
 var initDiceThrow = 6;
 var diceThrow = initDiceThrow;
-var initColor = 'red';
+var initColor = 'blue';
 var playerColor = initColor;
 // #region
 var playableSquares = Array.from(document.querySelectorAll('.square[data-index]')).sort(function (a, b) {
@@ -291,8 +291,9 @@ function NextIdx(currIdx) {
 }
 function CheckAndHandleWin(color) {
   var _a;
-  if (((_a = colorFinishedPawns[color]) === null || _a === void 0 ? void 0 : _a.childElementCount) === 4) {
+  if (((_a = colorFinishedPawns[color]) === null || _a === void 0 ? void 0 : _a.childElementCount) === 1) {
     console.log('WIN');
+    diceText.innerText = 'Not Ready';
     dice.removeEventListener('click', DiceClick);
     var winModal = document.querySelector('#win-modal');
     winModal === null || winModal === void 0 ? void 0 : winModal.showModal();
@@ -308,9 +309,9 @@ function PawnHandler(color_) {
     if (playerColor == color_ && pickPawn) {
       var dataSetIndex = this.parentElement.dataset["win" + color_];
       // * Check if we are on the lane and if we win
-      if (diceThrow !== 6) {
-        playerColor = colorOrder[color_];
-      }
+      // if (diceThrow !== 6) {
+      //   playerColor = colorOrder[color_];
+      // }
       if (dataSetIndex !== undefined) {
         if (this.parentElement) {
           var removedPawn = this.parentElement.removeChild(this);
@@ -352,7 +353,7 @@ function BoardCleanUp(currIdx, nextIdx, color, pawnElement, winLane) {
     console.log('yup we are on boardcleanup for tha pawn');
     var parentSquare = pawnElement.parentElement;
     var steps = (currIdx - parseInt(colorEnd[color]) + diceThrow - 1) % playableSquares.length;
-    if (steps > 4) {
+    if (steps >= 4) {
       console.log('we gp straigth to finished');
       colorFinishedPawns[color].appendChild(RemoveChildFromAnElement(parentSquare));
     } else {
@@ -477,9 +478,10 @@ function PassYourTurn() {
   gameInfo.classList.add('game-info-out');
   gameInfo.classList.remove('game-info-in');
   TogglePawnAndDice();
-  dice.focus();
-  playerColor = colorOrder[playerColor];
+  // dice.focus();
+  // playerColor = colorOrder[playerColor];
 }
+
 function RemoveChildFromAnElement(parent) {
   return parent.removeChild(parent.firstElementChild);
 }
@@ -533,7 +535,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58973" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50550" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

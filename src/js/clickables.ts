@@ -24,7 +24,7 @@ const colorOrder: {
 };
 const initDiceThrow = 6;
 let diceThrow = initDiceThrow;
-const initColor = 'red';
+const initColor = 'blue';
 let playerColor: possibleColors = initColor;
 
 // #region
@@ -124,8 +124,9 @@ function NextIdx(currIdx: number) {
   return (currIdx + diceThrow) % playableSquares.length;
 }
 function CheckAndHandleWin(color: possibleColors) {
-  if (colorFinishedPawns[color]?.childElementCount === 4) {
+  if (colorFinishedPawns[color]?.childElementCount === 1) {
     console.log('WIN');
+    diceText.innerText = 'Not Ready';
     dice.removeEventListener('click', DiceClick);
     const winModal = document.querySelector<HTMLDialogElement>('#win-modal');
     winModal?.showModal();
@@ -142,9 +143,9 @@ function PawnHandler(color_: possibleColors) {
         `win${color_}`
       ];
       // * Check if we are on the lane and if we win
-      if (diceThrow !== 6) {
-        playerColor = colorOrder[color_];
-      }
+      // if (diceThrow !== 6) {
+      //   playerColor = colorOrder[color_];
+      // }
       if (dataSetIndex !== undefined) {
         if (this.parentElement) {
           const removedPawn = this.parentElement.removeChild(this);
@@ -192,7 +193,7 @@ function BoardCleanUp(
     const steps =
       (currIdx - parseInt(colorEnd[color]) + diceThrow - 1) %
       playableSquares.length;
-    if (steps > 4) {
+    if (steps >= 4) {
       console.log('we gp straigth to finished');
       colorFinishedPawns[color].appendChild(
         RemoveChildFromAnElement(parentSquare)
@@ -350,8 +351,8 @@ function PassYourTurn(this: Element) {
   gameInfo.classList.add('game-info-out');
   gameInfo.classList.remove('game-info-in');
   TogglePawnAndDice();
-  dice.focus();
-  playerColor = colorOrder[playerColor];
+  // dice.focus();
+  // playerColor = colorOrder[playerColor];
 }
 function RemoveChildFromAnElement(parent: Element) {
   return parent.removeChild(parent.firstElementChild as Element);
