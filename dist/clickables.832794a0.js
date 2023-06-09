@@ -123,7 +123,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ClearBoardHistory = exports.AppendBoardHistory = exports.ColorWinLane = exports.TurnOnDice = exports.SquareInsides = void 0;
+exports.RemovePawnListeners = exports.RemoveMyListeners = exports.ClearBoardHistory = exports.AppendBoardHistory = exports.ColorWinLane = exports.TurnOnDice = exports.SquareInsides = void 0;
 var SquareInsides = /** @class */function () {
   function SquareInsides() {
     this.colors = '';
@@ -203,6 +203,21 @@ function ClearBoardHistory() {
   moveCount = 0;
 }
 exports.ClearBoardHistory = ClearBoardHistory;
+function RemoveMyListeners(element) {
+  var _a;
+  (_a = element.parentElement) === null || _a === void 0 ? void 0 : _a.replaceChild(element.cloneNode(true), element);
+}
+exports.RemoveMyListeners = RemoveMyListeners;
+function RemovePawnListeners(colors) {
+  for (var _i = 0, colors_1 = colors; _i < colors_1.length; _i++) {
+    var color = colors_1[_i];
+    var pawnOfColor = Array.from(document.querySelectorAll("[data-pawn=" + color + "]"));
+    pawnOfColor.forEach(function (e) {
+      RemoveMyListeners(e);
+    });
+  }
+}
+exports.RemovePawnListeners = RemovePawnListeners;
 },{}],"src/js/clickables.ts":[function(require,module,exports) {
 "use strict";
 
@@ -222,7 +237,7 @@ var colorOrder = {
 };
 var initDiceThrow = 6;
 var diceThrow = initDiceThrow;
-var initColor = 'blue';
+var initColor = 'red';
 var playerColor = initColor;
 // #region
 var playableSquares = Array.from(document.querySelectorAll('.square[data-index]')).sort(function (a, b) {
@@ -255,24 +270,13 @@ var colorFinishedPawns = {
   yellow: document.querySelector('.finished-pawns-yellow')
 };
 var placePawn = document.querySelector('.place-pawn');
-var placeSkip = document.querySelector('.place-skip');
 var gameInfo = document.querySelector('#game-info');
-document.querySelector('.close-modal').addEventListener('click', CloseModal);
-function CloseModal() {
-  document.querySelector('.win-screen').classList.add('display-none');
-}
 var buttonRestart = document.querySelector('.button-restart');
 buttonRestart.addEventListener('click', KillAllPawns);
 var dice = document.querySelector('.dice');
 var diceText = document.querySelector('.dice-before-text');
 var diceReady = true;
 var pickPawn = false;
-var colorPawn = {
-  red: Array.from(document.querySelectorAll("[data-pawn=red]")),
-  blue: Array.from(document.querySelectorAll("[data-pawn=blue]")),
-  green: Array.from(document.querySelectorAll("[data-pawn=green]")),
-  yellow: Array.from(document.querySelectorAll("[data-pawn=yellow]"))
-};
 // #endregion
 function TogglePawnAndDice() {
   diceReady = !diceReady;
@@ -290,13 +294,14 @@ function NextIdx(currIdx) {
   return (currIdx + diceThrow) % playableSquares.length;
 }
 function CheckAndHandleWin(color) {
-  var _a;
+  var _a, _b;
   if (((_a = colorFinishedPawns[color]) === null || _a === void 0 ? void 0 : _a.childElementCount) === 1) {
     console.log('WIN');
+    console.log('hello text chabge mayve ti bot ready?????');
     diceText.innerText = 'Not Ready';
     dice.removeEventListener('click', DiceClick);
-    var winModal = document.querySelector('#win-modal');
-    winModal === null || winModal === void 0 ? void 0 : winModal.showModal();
+    (_b = document.querySelector('#win-modal')) === null || _b === void 0 ? void 0 : _b.showModal();
+    (0, initialiser_1.RemovePawnListeners)(colors);
     buttonRestart.focus();
     diceReady = false;
     pickPawn = false;
@@ -309,17 +314,20 @@ function PawnHandler(color_) {
     if (playerColor == color_ && pickPawn) {
       var dataSetIndex = this.parentElement.dataset["win" + color_];
       // * Check if we are on the lane and if we win
-      // if (diceThrow !== 6) {
-      //   playerColor = colorOrder[color_];
-      // }
+      if (diceThrow !== 6) {
+        playerColor = colorOrder[color_];
+      }
       if (dataSetIndex !== undefined) {
         if (this.parentElement) {
           var removedPawn = this.parentElement.removeChild(this);
+          console.log('we are on lane ');
           if (parseInt(dataSetIndex) + diceThrow > 3) {
+            console.log('we finish');
             this.removeEventListener('click', HOHandler);
             (_a = colorFinishedPawns[color_]) === null || _a === void 0 ? void 0 : _a.appendChild(removedPawn);
             CheckAndHandleWin(color_);
           } else {
+            console.log('we move on the lane');
             colorWinLane[color_][parseInt(dataSetIndex) + diceThrow].appendChild(removedPawn);
           }
         }
@@ -327,16 +335,21 @@ function PawnHandler(color_) {
         return;
       }
       // * We are not on lane
+      console.log('we are not on lane');
       var idx = parseInt(this.parentElement.dataset.index);
       var nextIdx = NextIdx(idx);
       if (SwitchToLane(idx, nextIdx, color_)) {
+        console.log('yup switching to lane');
         BoardCleanUp(idx, idx, color_, this, true);
         TogglePawnAndDice();
         return;
       }
       // * we are on the board
-      BoardCleanUp(idx, nextIdx, color_, this);
-      TogglePawnAndDice();
+      if (BoardCleanUp(idx, nextIdx, color_, this)) {
+        return;
+      } else {
+        TogglePawnAndDice();
+      }
     }
   };
   // ! TODO: ADD HISTORY APPEND
@@ -349,13 +362,17 @@ function BoardCleanUp(currIdx, nextIdx, color, pawnElement, winLane) {
   if (winLane === void 0) {
     winLane = false;
   }
+  console.log('yup we are on boardcleanup for tha pawn');
   if (winLane) {
-    console.log('yup we are on boardcleanup for tha pawn');
+    console.log('boardclean up for element on winlane');
     var parentSquare = pawnElement.parentElement;
     var steps = (currIdx - parseInt(colorEnd[color]) + diceThrow - 1) % playableSquares.length;
     if (steps >= 4) {
       console.log('we gp straigth to finished');
       colorFinishedPawns[color].appendChild(RemoveChildFromAnElement(parentSquare));
+      CheckAndHandleWin(color);
+      console.log('we win straight from the board so we stop the previous ones');
+      return true;
     } else {
       console.log('win lane now');
       console.log(steps);
@@ -365,6 +382,7 @@ function BoardCleanUp(currIdx, nextIdx, color, pawnElement, winLane) {
     }
     return;
   }
+  console.log('we are not on lane');
   // ! we need to kill pawns
   if (pawnElement.parentElement) {
     var movedPawn = RemoveChildFromAnElement(pawnElement.parentElement);
@@ -479,29 +497,24 @@ function PassYourTurn() {
   gameInfo.classList.remove('game-info-in');
   TogglePawnAndDice();
   // dice.focus();
-  // playerColor = colorOrder[playerColor];
+  playerColor = colorOrder[playerColor];
 }
-
 function RemoveChildFromAnElement(parent) {
   return parent.removeChild(parent.firstElementChild);
 }
 //document.addEventListener('keydown', (e) => console.log(e.target));
 function KillAllPawns() {
-  var _loop_1 = function _loop_1(color) {
+  for (var _i = 0, colors_2 = colors; _i < colors_2.length; _i++) {
+    var color = colors_2[_i];
     var spawnForColor = colorPawnsSpawn[color];
     var pawnOfColor = Array.from(document.querySelectorAll("[data-pawn=" + color + "]"));
     pawnOfColor.forEach(function (e) {
       var _a;
       (_a = e.parentElement) === null || _a === void 0 ? void 0 : _a.removeChild(e);
-      e.removeEventListener('click', PawnHandler(color));
+      (0, initialiser_1.RemoveMyListeners)(e);
     });
     spawnForColor.append.apply(spawnForColor, pawnOfColor);
-  };
-  for (var _i = 0, colors_2 = colors; _i < colors_2.length; _i++) {
-    var color = colors_2[_i];
-    _loop_1(color);
   }
-  CloseModal();
   (0, initialiser_1.ClearBoardHistory)();
   playerColor = initColor;
   diceThrow = initDiceThrow;
@@ -535,7 +548,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50550" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50676" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

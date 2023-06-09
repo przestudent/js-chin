@@ -88,3 +88,17 @@ export function ClearBoardHistory() {
   boardHistory.innerHTML = '';
   moveCount = 0;
 }
+export function RemoveMyListeners(element: Element) {
+  element.parentElement?.replaceChild(element.cloneNode(true), element);
+}
+
+export function RemovePawnListeners(colors: possibleColors[]) {
+  for (const color of colors) {
+    const pawnOfColor = Array.from(
+      document.querySelectorAll(`[data-pawn=${color}]`)
+    );
+    pawnOfColor.forEach((e) => {
+      RemoveMyListeners(e);
+    });
+  }
+}

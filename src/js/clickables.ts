@@ -4,6 +4,8 @@ import {
   AppendBoardHistory,
   TurnOnDice,
   ClearBoardHistory,
+  RemoveMyListeners,
+  RemovePawnListeners,
 } from './initialiser';
 
 document.querySelector<HTMLDialogElement>('#tutorial')?.showModal();
@@ -24,7 +26,7 @@ const colorOrder: {
 };
 const initDiceThrow = 6;
 let diceThrow = initDiceThrow;
-const initColor = 'blue';
+const initColor = 'red';
 let playerColor: possibleColors = initColor;
 
 // #region
@@ -75,17 +77,7 @@ const colorFinishedPawns = {
   yellow: document.querySelector('.finished-pawns-yellow') as HTMLElement,
 };
 const placePawn = document.querySelector('.place-pawn') as HTMLElement;
-const placeSkip = document.querySelector('.place-skip');
 const gameInfo = document.querySelector('#game-info') as HTMLElement;
-
-(
-  document.querySelector<HTMLButtonElement>('.close-modal') as HTMLButtonElement
-).addEventListener('click', CloseModal);
-function CloseModal() {
-  (document.querySelector('.win-screen') as HTMLElement).classList.add(
-    'display-none'
-  );
-}
 
 const buttonRestart = document.querySelector(
   '.button-restart'
@@ -101,12 +93,6 @@ const diceText = document.querySelector<HTMLElement>(
 
 let diceReady = true;
 let pickPawn = false;
-const colorPawn = {
-  red: Array.from(document.querySelectorAll(`[data-pawn=red]`)),
-  blue: Array.from(document.querySelectorAll(`[data-pawn=blue]`)),
-  green: Array.from(document.querySelectorAll(`[data-pawn=green]`)),
-  yellow: Array.from(document.querySelectorAll(`[data-pawn=yellow]`)),
-};
 // #endregion
 function TogglePawnAndDice() {
   diceReady = !diceReady;
@@ -126,10 +112,11 @@ function NextIdx(currIdx: number) {
 function CheckAndHandleWin(color: possibleColors) {
   if (colorFinishedPawns[color]?.childElementCount === 1) {
     console.log('WIN');
+    console.log('hello text chabge mayve ti bot ready?????');
     diceText.innerText = 'Not Ready';
     dice.removeEventListener('click', DiceClick);
-    const winModal = document.querySelector<HTMLDialogElement>('#win-modal');
-    winModal?.showModal();
+    document.querySelector<HTMLDialogElement>('#win-modal')?.showModal();
+    RemovePawnListeners(colors);
     buttonRestart.focus();
     diceReady = false;
     pickPawn = false;
@@ -143,17 +130,20 @@ function PawnHandler(color_: possibleColors) {
         `win${color_}`
       ];
       // * Check if we are on the lane and if we win
-      // if (diceThrow !== 6) {
-      //   playerColor = colorOrder[color_];
-      // }
+      if (diceThrow !== 6) {
+        playerColor = colorOrder[color_];
+      }
       if (dataSetIndex !== undefined) {
         if (this.parentElement) {
           const removedPawn = this.parentElement.removeChild(this);
+          console.log('we are on lane ');
           if (parseInt(dataSetIndex) + diceThrow > 3) {
+            console.log('we finish');
             this.removeEventListener('click', HOHandler);
             colorFinishedPawns[color_]?.appendChild(removedPawn);
             CheckAndHandleWin(color_);
           } else {
+            console.log('we move on the lane');
             colorWinLane[color_][
               parseInt(dataSetIndex) + diceThrow
             ].appendChild(removedPawn);
@@ -164,18 +154,23 @@ function PawnHandler(color_: possibleColors) {
         return;
       }
       // * We are not on lane
+      console.log('we are not on lane');
       const idx = parseInt(
         (this.parentElement as HTMLElement).dataset.index as string
       );
       const nextIdx = NextIdx(idx);
       if (SwitchToLane(idx, nextIdx, color_)) {
+        console.log('yup switching to lane');
         BoardCleanUp(idx, idx, color_, this, true);
         TogglePawnAndDice();
         return;
       }
       // * we are on the board
-      BoardCleanUp(idx, nextIdx, color_, this);
-      TogglePawnAndDice();
+      if (BoardCleanUp(idx, nextIdx, color_, this)) {
+        return;
+      } else {
+        TogglePawnAndDice();
+      }
     }
   };
   // ! TODO: ADD HISTORY APPEND
@@ -187,8 +182,9 @@ function BoardCleanUp(
   pawnElement: Element,
   winLane = false
 ) {
+  console.log('yup we are on boardcleanup for tha pawn');
   if (winLane) {
-    console.log('yup we are on boardcleanup for tha pawn');
+    console.log('boardclean up for element on winlane');
     const parentSquare = pawnElement.parentElement as Element;
     const steps =
       (currIdx - parseInt(colorEnd[color]) + diceThrow - 1) %
@@ -198,6 +194,11 @@ function BoardCleanUp(
       colorFinishedPawns[color].appendChild(
         RemoveChildFromAnElement(parentSquare)
       );
+      CheckAndHandleWin(color);
+      console.log(
+        'we win straight from the board so we stop the previous ones'
+      );
+      return true;
     } else {
       console.log('win lane now');
       console.log(steps);
@@ -209,6 +210,7 @@ function BoardCleanUp(
     }
     return;
   }
+  console.log('we are not on lane');
   // ! we need to kill pawns
   if (pawnElement.parentElement) {
     const movedPawn = RemoveChildFromAnElement(pawnElement.parentElement);
@@ -352,7 +354,7 @@ function PassYourTurn(this: Element) {
   gameInfo.classList.remove('game-info-in');
   TogglePawnAndDice();
   // dice.focus();
-  // playerColor = colorOrder[playerColor];
+  playerColor = colorOrder[playerColor];
 }
 function RemoveChildFromAnElement(parent: Element) {
   return parent.removeChild(parent.firstElementChild as Element);
@@ -368,11 +370,10 @@ function KillAllPawns() {
     );
     pawnOfColor.forEach((e) => {
       e.parentElement?.removeChild(e);
-      e.removeEventListener('click', PawnHandler(color));
+      RemoveMyListeners(e);
     });
     spawnForColor.append(...pawnOfColor);
   }
-  CloseModal();
   ClearBoardHistory();
   playerColor = initColor;
   diceThrow = initDiceThrow;
