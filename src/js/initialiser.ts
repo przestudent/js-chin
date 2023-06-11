@@ -34,7 +34,7 @@ export function TurnOnDice(i: number) {
 
 function WinLaneConstructor(color: possibleColors): Element[] {
   const arr = Array.from(
-    document.querySelectorAll<HTMLElement>(`[data-win${color}]`)
+    document.querySelectorAll<HTMLDivElement>(`[data-win${color}]`)
   );
   arr.sort((a, b) => {
     return (

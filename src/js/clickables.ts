@@ -32,37 +32,35 @@ let playerColor: possibleColors = initColor;
 // #region
 
 const playableSquares = Array.from(
-  document.querySelectorAll<HTMLElement>('.square[data-index]')
+  document.querySelectorAll<HTMLDivElement>('.square[data-index]')
 ).sort((a, b) => {
   return (
     parseInt(a.dataset.index as string) - parseInt(b.dataset.index as string)
   );
 });
 
-const playerColorShow = document.querySelector('.player') as Element;
+const playerColorShow = document.querySelector('.player') as HTMLDivElement;
 const colorWinLane = ColorWinLane();
 
 const colorEnd: { [color in possibleColors]: string } = {
-  red: (document.querySelector<HTMLElement>('[data-end=red]') as HTMLElement)
+  red: (document.querySelector('[data-end=red]') as HTMLDivElement).dataset
+    .index as string,
+  blue: (document.querySelector('[data-end=blue]') as HTMLDivElement).dataset
+    .index as string,
+  yellow: (document.querySelector('[data-end=yellow]') as HTMLDivElement)
     .dataset.index as string,
-  blue: (document.querySelector<HTMLElement>('[data-end=blue]') as HTMLElement)
-    .dataset.index as string,
-  yellow: (
-    document.querySelector<HTMLElement>('[data-end=yellow]') as HTMLElement
-  ).dataset.index as string,
-  green: (
-    document.querySelector<HTMLElement>('[data-end=green]') as HTMLElement
-  ).dataset.index as string,
+  green: (document.querySelector('[data-end=green]') as HTMLDivElement).dataset
+    .index as string,
 };
 const colorStart: { [color in possibleColors]: string } = {
-  red: (document.querySelector<HTMLElement>('.red-light') as HTMLElement)
-    .dataset.index as string,
-  blue: (document.querySelector<HTMLElement>('.blue-light') as HTMLElement)
-    .dataset.index as string,
-  yellow: (document.querySelector<HTMLElement>('.yellow-light') as HTMLElement)
-    .dataset.index as string,
-  green: (document.querySelector<HTMLElement>('.green-light') as HTMLElement)
-    .dataset.index as string,
+  red: (document.querySelector('.red-light') as HTMLDivElement).dataset
+    .index as string,
+  blue: (document.querySelector('.blue-light') as HTMLDivElement).dataset
+    .index as string,
+  yellow: (document.querySelector('.yellow-light') as HTMLDivElement).dataset
+    .index as string,
+  green: (document.querySelector('.green-light') as HTMLDivElement).dataset
+    .index as string,
 };
 const colorPawnsSpawn: { [color in possibleColors]: HTMLElement } = {
   red: document.querySelector('#pawns-red') as HTMLElement,
@@ -71,25 +69,21 @@ const colorPawnsSpawn: { [color in possibleColors]: HTMLElement } = {
   green: document.querySelector('#pawns-green') as HTMLElement,
 };
 const colorFinishedPawns = {
-  red: document.querySelector('.finished-pawns-red') as HTMLElement,
-  green: document.querySelector('.finished-pawns-green') as HTMLElement,
-  blue: document.querySelector('.finished-pawns-blue') as HTMLElement,
-  yellow: document.querySelector('.finished-pawns-yellow') as HTMLElement,
+  red: document.querySelector('.finished-pawns-red') as HTMLDivElement,
+  green: document.querySelector('.finished-pawns-green') as HTMLDivElement,
+  blue: document.querySelector('.finished-pawns-blue') as HTMLDivElement,
+  yellow: document.querySelector('.finished-pawns-yellow') as HTMLDivElement,
 };
-const placePawn = document.querySelector('.place-pawn') as HTMLElement;
-const gameInfo = document.querySelector('#game-info') as HTMLElement;
+const placePawn = document.querySelector('.place-pawn') as HTMLButtonElement;
+const gameInfo = document.querySelector('#game-info') as HTMLDivElement;
 
 const buttonRestart = document.querySelector(
   '.button-restart'
 ) as HTMLButtonElement;
 buttonRestart.addEventListener('click', KillAllPawns);
 
-const dice = document.querySelector<HTMLButtonElement>(
-  '.dice'
-) as HTMLButtonElement;
-const diceText = document.querySelector<HTMLElement>(
-  '.dice-before-text'
-) as HTMLElement;
+const dice = document.querySelector('.dice') as HTMLButtonElement;
+const diceText = document.querySelector('.dice-before-text') as HTMLDivElement;
 
 let diceReady = true;
 let pickPawn = false;
