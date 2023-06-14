@@ -193,6 +193,7 @@ dialog#tutorial[open]::backdrop {
 /* #region game-wrapper */
 #game-wrapper {
   width: 100%;
+  height: 100%;
   position: absolute;
   background-color: var(--background-default);
   display: grid;
@@ -480,6 +481,12 @@ table>tbody>tr>td:first-child {
 }
 
 /* #endregion */
+@media(max-width:661px) {
+  :root {
+    --square-size: 3rem;
+    --spawn-size: 6rem;
+  }
+}
 
 @media (max-width:970px) {
   .modal-wrapper {
@@ -541,9 +548,10 @@ table>tbody>tr>td:first-child {
   }
 }
 
+/* 
 @media (prefers-color-scheme:light) {
   :root {
     --background-default: black;
     --border-color: white;
   }
-}
+} */
