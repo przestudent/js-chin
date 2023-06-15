@@ -126,11 +126,6 @@ dialog#tutorial[open]::backdrop {
 }
 
 /* #endregion */
-/* ! TODO: FIX IT SO ITS NICE */
-/* .win-buttons button:target {
-  border-color: aqua;
-  transform: border-color;
-} */
 
 /* #region modals */
 .display-none {

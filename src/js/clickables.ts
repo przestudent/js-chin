@@ -1,17 +1,14 @@
 import {
-  SquareInsides,
   ColorWinLane,
   AppendBoardHistory,
   TurnOnDice,
   ClearBoardHistory,
   RemoveMyListeners,
   RemovePawnListeners,
+  RemoveChildFromAnElement,
 } from './initialiser';
-
 document.querySelector<HTMLDialogElement>('#tutorial')?.showModal();
 const colors: possibleColors[] = ['red', 'blue', 'green', 'yellow'];
-
-const roadToWin = 39;
 
 const colorOrder: {
   red: 'blue';
@@ -105,8 +102,6 @@ function NextIdx(currIdx: number) {
 }
 function CheckAndHandleWin(color: possibleColors) {
   if (colorFinishedPawns[color]?.childElementCount === 1) {
-    console.log('WIN');
-    console.log('hello text chabge mayve ti bot ready?????');
     diceText.innerText = 'Not Ready';
     dice.removeEventListener('click', DiceClick);
     document.querySelector<HTMLDialogElement>('#win-modal')?.showModal();
@@ -130,14 +125,11 @@ function PawnHandler(color_: possibleColors) {
       if (dataSetIndex !== undefined) {
         if (this.parentElement) {
           const removedPawn = this.parentElement.removeChild(this);
-          console.log('we are on lane ');
           if (parseInt(dataSetIndex) + diceThrow > 3) {
-            console.log('we finish');
             this.removeEventListener('click', HOHandler);
             colorFinishedPawns[color_]?.appendChild(removedPawn);
             CheckAndHandleWin(color_);
           } else {
-            console.log('we move on the lane');
             colorWinLane[color_][
               parseInt(dataSetIndex) + diceThrow
             ].appendChild(removedPawn);
@@ -148,13 +140,12 @@ function PawnHandler(color_: possibleColors) {
         return;
       }
       // * We are not on lane
-      console.log('we are not on lane');
       const idx = parseInt(
         (this.parentElement as HTMLElement).dataset.index as string
       );
       const nextIdx = NextIdx(idx);
       if (SwitchToLane(idx, nextIdx, color_)) {
-        console.log('yup switching to lane');
+        //we switch to lane
         BoardCleanUp(idx, idx, color_, this, true);
         TogglePawnAndDice();
         return;
@@ -167,7 +158,7 @@ function PawnHandler(color_: possibleColors) {
       }
     }
   };
-  // ! TODO: ADD HISTORY APPEND
+  // // TODO-DONE: ADD HISTORY APPEND
 }
 function BoardCleanUp(
   currIdx: number,
@@ -176,57 +167,39 @@ function BoardCleanUp(
   pawnElement: Element,
   winLane = false
 ) {
-  console.log('yup we are on boardcleanup for tha pawn');
   if (winLane) {
-    console.log('boardclean up for element on winlane');
     const parentSquare = pawnElement.parentElement as Element;
     const steps =
       (currIdx - parseInt(colorEnd[color]) + diceThrow - 1) %
       playableSquares.length;
     if (steps >= 4) {
-      console.log('we gp straigth to finished');
       colorFinishedPawns[color].appendChild(
         RemoveChildFromAnElement(parentSquare)
       );
       CheckAndHandleWin(color);
-      console.log(
-        'we win straight from the board so we stop the previous ones'
-      );
       return true;
     } else {
-      console.log('win lane now');
-      console.log(steps);
-      console.log(colorWinLane[color]);
-      console.log(colorWinLane[color][steps]);
       colorWinLane[color][steps].appendChild(
         RemoveChildFromAnElement(parentSquare)
       );
     }
     return;
   }
-  console.log('we are not on lane');
-  // ! we need to kill pawns
+
   if (pawnElement.parentElement) {
     const movedPawn = RemoveChildFromAnElement(pawnElement.parentElement);
     CheckAndKillEnemyPawns(nextIdx, color);
     playableSquares[nextIdx].appendChild(movedPawn);
-  } else {
-    console.log('no parent');
-  }
+  } //WE OMIT ELSE, THERE IS ALWAYS A PARENT
 }
-// TODO: FIX IT SO WE HAVE A NICE FUNCTION THAT CHECKS FOR THE PARENT
+// TODO-DONT CARE: FIX IT SO WE HAVE A NICE FUNCTION THAT CHECKS FOR THE PARENT
 function SwitchToLane(currIdx: number, nextIdx: number, color: possibleColors) {
-  // * TODO: make it pretty maybe
-  console.log([
-    ['currIdx', currIdx],
-    ['nextIdx', nextIdx],
-  ]);
+  // * TODO: make it pretty maybe? HYUH WDYM
   if (color === 'blue') {
     let blueTempEnd = [36, 37, 38, 39, 0, 1];
     if (nextIdx > 1 && nextIdx < 8 && blueTempEnd.includes(currIdx)) {
       // ! TODO FIX THIS SHIT, THROWN 2 WHEN ON 37/38 I BELIEVE AND WON, FIX!!!!
       // ? Might work now!
-      console.log('TEPTPEPTEPTPEP WE SHOULD SWITCH NOW~~');
       return true;
     } else {
       return false;
@@ -242,7 +215,7 @@ function SwitchToLane(currIdx: number, nextIdx: number, color: possibleColors) {
   }
 }
 function SpawnCallback(colorSpawn: HTMLElement, color: possibleColors) {
-  return function (e: Event) {
+  return function () {
     if (
       pickPawn &&
       diceThrow === 6 &&
@@ -257,14 +230,7 @@ function SpawnCallback(colorSpawn: HTMLElement, color: possibleColors) {
       CheckAndKillEnemyPawns(startIndex, color);
       playableSquares[startIndex].appendChild(removedPawnFromSpawn);
       TogglePawnAndDice();
-    } else {
-      console.log([
-        ['Spawn', colorSpawn],
-        ['diceThrow', diceThrow],
-        ['playerColor', playerColor],
-        'Unable to pick a pawn.',
-      ]);
-    }
+    } // ? TODO, i guess we can add a dialog to show that you cant pick a pawn from spawn?
   };
 }
 
@@ -273,30 +239,17 @@ for (const color of colors) {
   colorSpawn.addEventListener('click', SpawnCallback(colorSpawn, color));
 }
 function CheckAndKillEnemyPawns(idx: number, color: possibleColors) {
-  console.log(
-    '--logging the next square nnd its child. its supposed to not have any? huh--'
-  );
-  console.log(playableSquares[idx].firstElementChild);
-  console.log(playableSquares[idx]);
-  console.log('---');
   if (playableSquares[idx].firstElementChild) {
     const nextIdxSquare = playableSquares[idx];
     const enemyPawn = nextIdxSquare.firstElementChild;
-    console.log(['enemyPawn?', enemyPawn]);
     if (enemyPawn instanceof HTMLElement && enemyPawn) {
       if (
         enemyPawn.dataset.pawn !== undefined &&
         enemyPawn.dataset.pawn !== color
       ) {
-        console.log('WE ENCOUNTER AN ENEMY, WE KILL THE PAWNS, PLACE OUR OWN.');
-        console.log(
-          `😒😒😒😒😒Enemy: ${enemyPawn} The Square ${nextIdxSquare}`
-        );
-        console.log('STACK TRACE');
-        console.trace();
+        // we encounter an enemy
         const enemyPawnColor = enemyPawn.dataset.pawn as possibleColors;
         const killedPawns = Array.from(nextIdxSquare.children).map((child) => {
-          console.log(child);
           // We make sure to delete it's event listeneres by cloning it and replacing it
           nextIdxSquare.replaceChild(child.cloneNode(true), child);
           return RemoveChildFromAnElement(nextIdxSquare);
@@ -314,7 +267,7 @@ function CheckAndKillEnemyPawns(idx: number, color: possibleColors) {
 // ! TODO FIX IT SO YOU CANT CLICK THE DICE
 // ! TODO FIX IT SO WHEN THROWN 6 6 6 YOU THROW UNTIL YOU DONT HIT 6
 dice.addEventListener('click', DiceClick);
-function DiceClick(this: HTMLButtonElement, e: Event) {
+function DiceClick(this: HTMLButtonElement) {
   if (diceReady) {
     diceThrow = Math.floor(Math.random() * 6) + 1; //! PLACE FOR THE CHANGE OF DICE THROW
     // diceThrow = Math.floor(Math.random() * 6) + 1;
@@ -338,6 +291,7 @@ function DiceClick(this: HTMLButtonElement, e: Event) {
       placePawn.addEventListener('click', PassYourTurn);
     }
   } else {
+    // ? TODO- we can also throw a dialog here ig
     console.log('YOU ARE NOT SUPPOSED TO THROW THE DICE YET');
   }
   this.focus();
@@ -347,14 +301,8 @@ function PassYourTurn(this: Element) {
   gameInfo.classList.add('game-info-out');
   gameInfo.classList.remove('game-info-in');
   TogglePawnAndDice();
-  // dice.focus();
   playerColor = colorOrder[playerColor];
 }
-function RemoveChildFromAnElement(parent: Element) {
-  return parent.removeChild(parent.firstElementChild as Element);
-}
-
-//document.addEventListener('keydown', (e) => console.log(e.target));
 
 function KillAllPawns() {
   for (const color of colors) {

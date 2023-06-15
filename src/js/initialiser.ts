@@ -1,27 +1,3 @@
-export class SquareInsides {
-  public colors: possibleColors | '';
-  public elements: number;
-  public powerUp: null;
-  constructor() {
-    this.colors = '';
-    this.elements = 0;
-    this.powerUp = null;
-  }
-  addPawn(color: possibleColors) {
-    this.elements++;
-    this.colors = color;
-  }
-  removePawn(idx: number) {
-    // RemoveChildFromAnElement(playableSquares[idx])
-    // * TODO: CONSIDER PUTTING IT HERE
-    if (this.elements) {
-      this.elements--;
-    }
-    if (this.elements <= 0) {
-      this.colors = '';
-    }
-  }
-}
 const dices = document.querySelectorAll<HTMLElement>('.dice-throw>i');
 dices[0].style.visibility = 'visible';
 
@@ -77,7 +53,6 @@ export function AppendBoardHistory(color: possibleColors, diceThrow: number) {
 
   tableRow.append(tableItem1, tableItem2, tableItem3);
   tableRowFragment.appendChild(tableRow);
-  // tableRowFragment.innerHTML = `<td>${moveCount}</td><td style="--player-color:${color}">${color}</td><td>${diceThrow}</td>`;
   if (!boardHistory.children.length) {
     boardHistory.appendChild(tableRowFragment);
   } else {
@@ -101,4 +76,7 @@ export function RemovePawnListeners(colors: possibleColors[]) {
       RemoveMyListeners(e);
     });
   }
+}
+export function RemoveChildFromAnElement(parent: Element) {
+  return parent.removeChild(parent.firstElementChild as Element);
 }
