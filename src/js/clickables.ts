@@ -158,7 +158,6 @@ function PawnHandler(color_: possibleColors) {
       }
     }
   };
-  // // TODO-DONE: ADD HISTORY APPEND
 }
 function BoardCleanUp(
   currIdx: number,
