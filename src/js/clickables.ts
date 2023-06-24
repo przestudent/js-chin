@@ -7,6 +7,7 @@ import {
   RemovePawnListeners,
   RemoveChildFromAnElement,
 } from './initialiser';
+import { StartConfetti } from './confetti';
 document.querySelector<HTMLDialogElement>('#tutorial')?.showModal();
 const colors: possibleColors[] = ['red', 'blue', 'green', 'yellow'];
 
@@ -37,6 +38,8 @@ const playableSquares = Array.from(
 });
 
 const playerColorShow = document.querySelector('.player') as HTMLDivElement;
+playerColorShow.style.setProperty('--player-color', playerColor);
+
 const colorWinLane = ColorWinLane();
 
 const colorEnd: { [color in possibleColors]: string } = {
@@ -105,6 +108,7 @@ function CheckAndHandleWin(color: possibleColors) {
     diceText.innerText = 'Not Ready';
     dice.removeEventListener('click', DiceClick);
     document.querySelector<HTMLDialogElement>('#win-modal')?.showModal();
+    StartConfetti();
     RemovePawnListeners(colors);
     buttonRestart.focus();
     diceReady = false;
@@ -121,6 +125,8 @@ function PawnHandler(color_: possibleColors) {
       // * Check if we are on the lane and if we win
       if (diceThrow !== 6) {
         playerColor = colorOrder[color_];
+        playerColorShow.innerText = playerColor;
+        playerColorShow.style.setProperty('--player-color', playerColor);
       }
       if (dataSetIndex !== undefined) {
         if (this.parentElement) {
@@ -301,6 +307,8 @@ function PassYourTurn(this: Element) {
   gameInfo.classList.remove('game-info-in');
   TogglePawnAndDice();
   playerColor = colorOrder[playerColor];
+  playerColorShow.innerText = playerColor;
+  playerColorShow.style.setProperty('--player-color', playerColor);
 }
 
 function KillAllPawns() {

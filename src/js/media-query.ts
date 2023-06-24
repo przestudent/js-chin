@@ -12,7 +12,6 @@ const body = document.querySelector('body') as HTMLBodyElement;
 
 let isMobile = false;
 mediaQueryListener.addEventListener('change', (e) => {
-  console.log('yes');
   if (e.matches) {
     ScreenChangeToMobile();
   } else {
@@ -32,7 +31,6 @@ if (mediaQueryListener.matches) {
   ScreenChangeToMobile();
 }
 function ScreenChangeToMobile() {
-  console.log(gameInfo);
   isMobile = true;
   const removedGameInfo = columnLeft.removeChild(gameInfo);
   const removedHistoryWrapper = columnRight.removeChild(historyScroll);
