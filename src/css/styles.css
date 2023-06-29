@@ -7,8 +7,7 @@
   --spawn-size: 7rem;
   --dice-button-size: 4rem;
   --column-size: 7vw;
-  --pawn-width: 1.8rem;
-  --pawn-height: 1.8rem;
+  --pawn-size: 1.65rem;
 
   --font-inter: 'Inter', sans-serif;
   --font-oxygen: 'Oxygen', sans-serif;
@@ -237,6 +236,7 @@ dialog#tutorial[open]::backdrop {
   grid-template-columns: 1fr 1fr;
   align-items: center;
   justify-items: center;
+  --pawn-size: 2.5rem;
 }
 
 .spawn-container {
@@ -246,7 +246,7 @@ dialog#tutorial[open]::backdrop {
 
 .finished-pawns {
   width: var(--spawn-size);
-  height: calc(var(--pawn-height) * 1.25);
+  height: calc(var(--pawn-size) * 1.25);
   background-color: var(--background-default);
   border: 2px solid var(--border-color);
   display: grid;
@@ -258,8 +258,8 @@ dialog#tutorial[open]::backdrop {
 }
 
 .pawn {
-  width: var(--pawn-width);
-  height: var(--pawn-height);
+  width: var(--pawn-size);
+  height: var(--pawn-size);
   transition: scale ease 0.2s;
   border: 1px solid var(--border-color);
   border-radius: 100%;
@@ -486,6 +486,7 @@ table>tbody>tr>td:first-child {
   :root {
     --square-size: 3rem;
     --spawn-size: 6rem;
+    --pawn-size: 1.35rem
   }
 }
 

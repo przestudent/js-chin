@@ -7,7 +7,8 @@ import {
   RemovePawnListeners,
   RemoveChildFromAnElement,
 } from './initialiser';
-import { StartConfetti } from './confetti';
+import StartConfetti from './confetti';
+StartConfetti();
 document.querySelector<HTMLDialogElement>('#tutorial')?.showModal();
 const colors: possibleColors[] = ['red', 'blue', 'green', 'yellow'];
 
@@ -125,8 +126,8 @@ function PawnHandler(color_: possibleColors) {
       // * Check if we are on the lane and if we win
       if (diceThrow !== 6) {
         playerColor = colorOrder[color_];
-        playerColorShow.innerText = playerColor;
-        playerColorShow.style.setProperty('--player-color', playerColor);
+        // playerColorShow.innerText = playerColor;
+        // playerColorShow.style.setProperty('--player-color', playerColor);
       }
       if (dataSetIndex !== undefined) {
         if (this.parentElement) {
@@ -274,11 +275,14 @@ function CheckAndKillEnemyPawns(idx: number, color: possibleColors) {
 dice.addEventListener('click', DiceClick);
 function DiceClick(this: HTMLButtonElement) {
   if (diceReady) {
-    diceThrow = Math.floor(Math.random() * 6) + 1; //! PLACE FOR THE CHANGE OF DICE THROW
+    // diceThrow = Math.floor(Math.random() * 6) + 1; //! PLACE FOR THE CHANGE OF DICE THROW
+    diceThrow = 6;
     // diceThrow = Math.floor(Math.random() * 6) + 1;
     // diceThrow = 6;
     if (diceThrow !== 6) {
       this.style.setProperty('--color-show', colorOrder[playerColor]);
+      playerColorShow.innerText = playerColor;
+      playerColorShow.style.setProperty('--player-color', playerColor);
     }
     AppendBoardHistory(playerColor, diceThrow);
     TurnOnDice(diceThrow);
@@ -307,8 +311,8 @@ function PassYourTurn(this: Element) {
   gameInfo.classList.remove('game-info-in');
   TogglePawnAndDice();
   playerColor = colorOrder[playerColor];
-  playerColorShow.innerText = playerColor;
-  playerColorShow.style.setProperty('--player-color', playerColor);
+  // playerColorShow.innerText = playerColor;
+  // playerColorShow.style.setProperty('--player-color', playerColor);
 }
 
 function KillAllPawns() {
