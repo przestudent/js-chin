@@ -30,11 +30,13 @@ body {
 
 /* #region dialogs*/
 dialog#win-modal[open] {
+  background: black;
+  color: white;
+  border: 2px solid white;
   display: flex;
   flex-direction: column;
   align-content: space-between;
   gap: 2rem;
-  background: var(--border-color);
   padding: 1rem 2rem;
   border-radius: 6px;
 }
@@ -111,7 +113,7 @@ dialog#tutorial[open]::backdrop {
 
 #win-modal h2 {
   text-align: center;
-  color: var(--background-default);
+  color: gold;
 }
 
 .win-buttons {

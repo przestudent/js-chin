@@ -10,6 +10,9 @@ import {
 import StartConfetti from './confetti';
 StartConfetti();
 document.querySelector<HTMLDialogElement>('#tutorial')?.showModal();
+
+//Set up
+
 const colors: possibleColors[] = ['red', 'blue', 'green', 'yellow'];
 
 const colorOrder: {
@@ -86,9 +89,17 @@ buttonRestart.addEventListener('click', KillAllPawns);
 const dice = document.querySelector('.dice') as HTMLButtonElement;
 const diceText = document.querySelector('.dice-before-text') as HTMLDivElement;
 
+//Adding specific event listeneres for the starting pawn area.
+for (const color of colors) {
+  const colorSpawn: HTMLElement = colorPawnsSpawn[color];
+  colorSpawn.addEventListener('click', SpawnCallback(colorSpawn, color));
+}
+
 let diceReady = true;
 let pickPawn = false;
 // #endregion
+
+//Switching off the state.
 function TogglePawnAndDice() {
   diceReady = !diceReady;
   pickPawn = !pickPawn;
@@ -105,7 +116,7 @@ function NextIdx(currIdx: number) {
   return (currIdx + diceThrow) % playableSquares.length;
 }
 function CheckAndHandleWin(color: possibleColors) {
-  if (colorFinishedPawns[color]?.childElementCount === 1) {
+  if (colorFinishedPawns[color]?.childElementCount === 4) {
     diceText.innerText = 'Not Ready';
     dice.removeEventListener('click', DiceClick);
     document.querySelector<HTMLDialogElement>('#win-modal')?.showModal();
@@ -116,6 +127,8 @@ function CheckAndHandleWin(color: possibleColors) {
     pickPawn = false;
   }
 }
+
+//HOF for each individual color of pawns.
 function PawnHandler(color_: possibleColors) {
   return function HOHandler(this: HTMLElement) {
     // * Check if we can move the pawn
@@ -126,8 +139,6 @@ function PawnHandler(color_: possibleColors) {
       // * Check if we are on the lane and if we win
       if (diceThrow !== 6) {
         playerColor = colorOrder[color_];
-        // playerColorShow.innerText = playerColor;
-        // playerColorShow.style.setProperty('--player-color', playerColor);
       }
       if (dataSetIndex !== undefined) {
         if (this.parentElement) {
@@ -166,6 +177,8 @@ function PawnHandler(color_: possibleColors) {
     }
   };
 }
+
+//This function checks if we win/switch to lane and also updates the board
 function BoardCleanUp(
   currIdx: number,
   nextIdx = currIdx,
@@ -198,14 +211,11 @@ function BoardCleanUp(
     playableSquares[nextIdx].appendChild(movedPawn);
   } //WE OMIT ELSE, THERE IS ALWAYS A PARENT
 }
-// TODO-DONT CARE: FIX IT SO WE HAVE A NICE FUNCTION THAT CHECKS FOR THE PARENT
 function SwitchToLane(currIdx: number, nextIdx: number, color: possibleColors) {
   // * TODO: make it pretty maybe? HYUH WDYM
   if (color === 'blue') {
     let blueTempEnd = [36, 37, 38, 39, 0, 1];
     if (nextIdx > 1 && nextIdx < 8 && blueTempEnd.includes(currIdx)) {
-      // ! TODO FIX THIS SHIT, THROWN 2 WHEN ON 37/38 I BELIEVE AND WON, FIX!!!!
-      // ? Might work now!
       return true;
     } else {
       return false;
@@ -220,6 +230,8 @@ function SwitchToLane(currIdx: number, nextIdx: number, color: possibleColors) {
     return false;
   }
 }
+
+//HOF for each spawn starting area
 function SpawnCallback(colorSpawn: HTMLElement, color: possibleColors) {
   return function () {
     if (
@@ -240,10 +252,6 @@ function SpawnCallback(colorSpawn: HTMLElement, color: possibleColors) {
   };
 }
 
-for (const color of colors) {
-  const colorSpawn: HTMLElement = colorPawnsSpawn[color];
-  colorSpawn.addEventListener('click', SpawnCallback(colorSpawn, color));
-}
 function CheckAndKillEnemyPawns(idx: number, color: possibleColors) {
   if (playableSquares[idx].firstElementChild) {
     const nextIdxSquare = playableSquares[idx];
@@ -260,25 +268,20 @@ function CheckAndKillEnemyPawns(idx: number, color: possibleColors) {
           nextIdxSquare.replaceChild(child.cloneNode(true), child);
           return RemoveChildFromAnElement(nextIdxSquare);
         });
-        //HERE
         colorPawnsSpawn[enemyPawnColor].append(...killedPawns);
       }
     } else {
-      console.log('its our pawn, do nofin');
+      console.log('It is our pawn, we do nothing.');
     }
   } else {
-    console.log('no children, we can proceed');
+    console.log('No children. we continue as normal.');
   }
 }
-// ! TODO FIX IT SO YOU CANT CLICK THE DICE
-// ! TODO FIX IT SO WHEN THROWN 6 6 6 YOU THROW UNTIL YOU DONT HIT 6
+
 dice.addEventListener('click', DiceClick);
 function DiceClick(this: HTMLButtonElement) {
   if (diceReady) {
-    // diceThrow = Math.floor(Math.random() * 6) + 1; //! PLACE FOR THE CHANGE OF DICE THROW
-    diceThrow = 6;
-    // diceThrow = Math.floor(Math.random() * 6) + 1;
-    // diceThrow = 6;
+    diceThrow = Math.floor(Math.random() * 6) + 1;
     if (diceThrow !== 6) {
       this.style.setProperty('--color-show', colorOrder[playerColor]);
       playerColorShow.innerText = playerColor;
@@ -300,8 +303,7 @@ function DiceClick(this: HTMLButtonElement) {
       placePawn.addEventListener('click', PassYourTurn);
     }
   } else {
-    // ? TODO- we can also throw a dialog here ig
-    console.log('YOU ARE NOT SUPPOSED TO THROW THE DICE YET');
+    console.log('You cannot throw the dice yet.');
   }
   this.focus();
 }
@@ -311,8 +313,6 @@ function PassYourTurn(this: Element) {
   gameInfo.classList.remove('game-info-in');
   TogglePawnAndDice();
   playerColor = colorOrder[playerColor];
-  // playerColorShow.innerText = playerColor;
-  // playerColorShow.style.setProperty('--player-color', playerColor);
 }
 
 function KillAllPawns() {
