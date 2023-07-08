@@ -29,10 +29,42 @@ body {
 }
 
 /* #region dialogs*/
-dialog#win-modal[open] {
+dialog#dice-not-ready {
+  text-align: center;
+}
+
+dialog#dice-not-ready>div:last-child {
+  margin-top: 1rem;
+  font-size: xx-large;
+}
+
+dialog#wrong-color[open] {
+  width: 15rem;
+  height: 20rem;
+  text-align: center;
+}
+
+.dialog-close-button {
+  border: none;
+  width: 75%;
+  font-size: x-large;
+  cursor: pointer;
+  border-radius: 6px;
+  color: black;
+  background-color: white;
+}
+
+#wrong-color>div:first-child {
+  font-size: xx-large;
+}
+
+dialog[open] {
   background: black;
   color: white;
   border: 2px solid white;
+}
+
+dialog#win-modal[open] {
   display: flex;
   flex-direction: column;
   align-content: space-between;
@@ -60,9 +92,6 @@ dialog#win-modal[open]::backdrop {
 dialog#tutorial[open] {
   display: flex;
   flex-direction: column;
-  background: black;
-  color: white;
-  border: 2px solid white;
   height: 30rem;
   width: 20rem;
   justify-content: space-between;
@@ -369,6 +398,8 @@ dialog#tutorial[open]::backdrop {
   height: var(--spawn-size);
   align-items: center;
   gap: 1rem;
+  font-size: xx-large;
+  font-weight: bolder;
 }
 
 .dice {
@@ -452,6 +483,7 @@ table>tbody>tr>td:first-child {
 /* #region player-and-dice */
 .player-and-dice-wrapper {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 1rem

@@ -50,8 +50,9 @@
       </div>
       <div class="column-middle">
         <div class="player-and-dice-wrapper">
+          <div>Current turn:</div>
           <div class="player">red</div>
-          <div class="dice-throw">
+          <div class="dice-throw" style="display: none">
             <i class="fa-solid fa-dice-one"></i>
             <i class="fa-solid fa-dice-two"></i>
             <i class="fa-solid fa-dice-three"></i>
@@ -225,7 +226,23 @@
         <button formmethod="dialog">✖</button>
       </form>
     </dialog>
-
+    <dialog id="dice-not-ready"> 
+      <h1>You can't throw the dice yet!</h1>
+      <h2>Go pick a pawn!</h2>
+      <h3>Or pass your turn!</h3>
+      <form method="dialog">
+        <button formmethod="dialog" class="dialog-close-button">Dismiss</button>
+      </form>
+      <div>↔</div>
+    </dialog></dialog>
+    <dialog id="wrong-color">
+      <div>^</div>
+      <h1>Pick a pawn of the current color!</h1>
+      <h2>Or pass your turn!</h2>
+      <form method="dialog">
+        <button formmethod="dialog" class="dialog-close-button">Dismiss</button>
+      </form>
+    </dialog>
     <script defer type="module" src="src/js/clickables.ts"></script>
     <script defer type="module" src="src/js/media-query.ts"></script>
   </body>

@@ -9,8 +9,8 @@ import {
 } from './initialiser';
 import StartConfetti from './confetti';
 StartConfetti();
-document.querySelector<HTMLDialogElement>('#tutorial')?.showModal();
 
+document.querySelector<HTMLDialogElement>('#tutorial')?.showModal();
 //Set up
 
 const colors: possibleColors[] = ['red', 'blue', 'green', 'yellow'];
@@ -174,6 +174,8 @@ function PawnHandler(color_: possibleColors) {
       } else {
         TogglePawnAndDice();
       }
+    } else if (pickPawn) {
+      document.querySelector<HTMLDialogElement>('#wrong-color')?.showModal();
     }
   };
 }
@@ -234,6 +236,7 @@ function SwitchToLane(currIdx: number, nextIdx: number, color: possibleColors) {
 //HOF for each spawn starting area
 function SpawnCallback(colorSpawn: HTMLElement, color: possibleColors) {
   return function () {
+    console.log('Spawn clicked!');
     if (
       pickPawn &&
       diceThrow === 6 &&
@@ -248,7 +251,9 @@ function SpawnCallback(colorSpawn: HTMLElement, color: possibleColors) {
       CheckAndKillEnemyPawns(startIndex, color);
       playableSquares[startIndex].appendChild(removedPawnFromSpawn);
       TogglePawnAndDice();
-    } // ? TODO, i guess we can add a dialog to show that you cant pick a pawn from spawn?
+    } else if (pickPawn && playerColor !== color) {
+      document.querySelector<HTMLDialogElement>('#wrong-color')?.showModal();
+    }
   };
 }
 
@@ -303,7 +308,7 @@ function DiceClick(this: HTMLButtonElement) {
       placePawn.addEventListener('click', PassYourTurn);
     }
   } else {
-    console.log('You cannot throw the dice yet.');
+    document.querySelector<HTMLDialogElement>('#dice-not-ready')?.showModal();
   }
   this.focus();
 }
@@ -313,6 +318,9 @@ function PassYourTurn(this: Element) {
   gameInfo.classList.remove('game-info-in');
   TogglePawnAndDice();
   playerColor = colorOrder[playerColor];
+  //this.style.setProperty('--color-show', colorOrder[playerColor]);
+  playerColorShow.innerText = playerColor;
+  playerColorShow.style.setProperty('--player-color', playerColor);
 }
 
 function KillAllPawns() {
